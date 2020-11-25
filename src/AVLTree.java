@@ -45,9 +45,12 @@ public class AVLTree {
 	 */
 	public String search(int k)
 	{
-
-		return "42";
+		//the case when the tree is empty
+		if(this.empty())
+			return null;
+		return searchRec(k, this.root);
 	}
+	//
 
 	/**
 	 * public int insert(int k, String i)
@@ -75,7 +78,10 @@ public class AVLTree {
 	//Meirav
 	public int delete(int k)
 	{
-		return 42;	// to be replaced by student code
+		if(search(k) == null)
+			return -1;
+		return 0;
+
 	}
 
 	/**
