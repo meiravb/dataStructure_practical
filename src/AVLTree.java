@@ -10,7 +10,6 @@
 public class AVLTree {
 	private IAVLNode root;
 
-
 	/**
 	 * public boolean empty()
 	 *
@@ -125,9 +124,79 @@ public class AVLTree {
 	 * promotion/rotation - counted as one rebalnce operation, double-rotation is counted as 2.
 	 * returns -1 if an item with key k already exists in the tree.
 	 */
+
 	//Daniella
+
+	private IAVLNode findParent(int k){ //find parent of node to be inserted
+											// O(height of tree) = O(logn)
+		IAVLNode x = this.root;
+		IAVLNode y = null;
+		while (x != null){
+			y = x;
+			if (x.getKey() > k)
+				x = x.getLeft();
+			else
+				x = x.getRight();
+		}
+		return y;
+	}
+
+	private void bstInsert(IAVLNode z){ //regular insert to bst - before balancing
+		IAVLNode y = findParent(z.getKey());
+		z.setParent(y);
+		if (z.getKey()<y.getKey())
+			y.setLeft(z);
+
+		else
+			y.setRight(z);
+	}
+
+	private int getDifference(IAVLNode n){
+		return n.getRight().getHeight()-n.getLeft().getHeight();
+	}
+
 	public int insert(int k, String i) {
-		return 42;	// to be replaced by student code
+		if (this.empty()){ //tree is empty
+			this.root = new AVLNode(k, i); //node inserted is the root
+			return 0;
+		}
+		else if (this.search(k) != null){ //node with key k already exists
+			return -1;
+		}
+		else{
+			IAVLNode newNode = new AVLNode(k, i); //node will be inserted as leaf with 2 virtual sons
+			newNode.setLeft(new AVLNode(-1, null));
+			newNode.getLeft().setHeight(-1);
+			newNode.setRight(new AVLNode(-1, null));
+			newNode.getRight().setHeight(-1);
+			bstInsert(newNode);
+			newNode.setHeight(0);
+			IAVLNode y = newNode.getParent();
+			IAVLNode z = newNode;
+			int actions = 0; //counts # of actions taken to balance tree
+			while (y.getParent()!=null){
+				boolean promotedHeight = false;
+				if (z.getHeight() == y.getHeight()){
+					y.setHeight(y.getHeight()+1); //promote y's height
+					promotedHeight = true;
+					actions+=1;
+				}
+				if (Math.abs(getDifference(y))<2){
+					if (!promotedHeight) { //difference is valid and no need to promote ancestors
+						return actions;
+					}
+					else{
+						z = y;
+						y = y.getParent(); //continue loop to check if more promotions are necessary
+					}
+				}
+				else{
+
+				}
+			}
+
+		}
+
 	}
 
 
