@@ -37,6 +37,21 @@ public class AVLTree {
 
 	}
 
+	public IAVLNode searchNodeRec(int k, IAVLNode root){
+		if(root.getKey() == k)
+			return root;
+		if(root.getKey() == -1)
+			return null;
+
+		if(k < root.getKey()){
+			return searchNodeRec(k, root.getLeft());
+		}
+		else {
+			return searchNodeRec(k, root.getRight());
+		}
+
+	}
+
 	/**
 	 * public String search(int k)
 	 *
@@ -50,7 +65,56 @@ public class AVLTree {
 			return null;
 		return searchRec(k, this.root);
 	}
+
+	public IAVLNode searchNode(int k)
+	{
+		//the case when the tree is empty
+		if(this.empty())
+			return null;
+		return searchNodeRec(k, this.root);
+	}
+
+	public IAVLNode minNode(IAVLNode root){
+		while (root.getLeft().isRealNode())
+			root = root.getLeft();
+		return root;
+	}
 	//
+
+	public void switchPosition(IAVLNode x, IAVLNode y){
+		if(x.getParent() == null)
+			this.root = y;
+		else if(equals(x, x.getParent().getLeft()))
+			x.getParent().setLeft(y);
+		else
+			x.getParent().setRight(y);
+		if(y != null)
+			y.setParent(x.getParent());
+
+	}
+
+	public void deleteBst(IAVLNode node){
+		if(!node.getLeft().isRealNode())
+			switchPosition(node, node.getRight());
+		else if(!node.getRight().isRealNode())
+			switchPosition(node, node.getLeft());
+		else{
+			IAVLNode succ = minNode(node.getRight());
+			if(!equals(succ.getParent(), node)){
+				switchPosition(succ, succ.getRight());
+				succ.setRight(node.getRight());
+				succ.getRight().setParent(succ);
+			}
+			switchPosition(node, succ);
+			succ.setLeft(node.getLeft());
+			succ.getLeft().setParent(succ);
+		}
+	}
+
+	private boolean equals(IAVLNode x, IAVLNode y) {
+		return x.getKey() == y.getKey();
+
+	}
 
 	/**
 	 * public int insert(int k, String i)
@@ -65,6 +129,7 @@ public class AVLTree {
 	public int insert(int k, String i) {
 		return 42;	// to be replaced by student code
 	}
+
 
 	/**
 	 * public int delete(int k)
