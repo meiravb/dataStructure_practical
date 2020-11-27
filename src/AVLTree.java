@@ -84,43 +84,33 @@ public class AVLTree {
 			y.setRight(z);
 	}
 
-	/*private int getBalance(IAVLNode n){
-		return n.getRight().getHeight()-n.getLeft().getHeight();
-	}*/
-
-	private void updateRootParent(IAVLNode y, IAVLNode x){
-		if (y.getParent() == null){
-			this.root = y; //y has no parent thus y is the new root
-		}
-		else{
+	private void updateRootParent(IAVLNode y, IAVLNode x){ //y is the new root, x is the old root
 			if (y.getParent().getLeft().getKey() == x.getKey()){ //x was a left son
 				y.getParent().setLeft(y); //y is now the left son
 			}
 			else{
 				y.getParent().setRight(y);//y is now the right son
 			}
-		}
 	}
 
 	private void update(IAVLNode y){
-		/*int actions = 0;
-		int heightBefore = y.getHeight();*/
 		y.setHeight();
-		/*if (y.getHeight() != heightBefore){ //height has been promoted or demoted
-			actions +=1;
-		}*/
 		y.setSize();
 		y.setBalance();
-		//return actions;
 	}
 
 	private IAVLNode leftRotate(IAVLNode x){//gets original root of subtree, returns new root of subtree
-		IAVLNode y = x.getRight();
+		IAVLNode y = x.getRight(); //y will be the new root
 		x.setRight(y.getLeft());
 		y.setLeft(x);
-		//rotation has completed - update parents and root if necessary
-		y.setParent(x.getParent());
-		updateRootParent(y, x);
+		//rotation has completed - update parents
+		if (x.getParent() == null){ //x was the root of the tree
+			this.root = y; //y is the new root
+		}
+		else{
+			y.setParent(x.getParent()); //x's parent is now y's parent
+			updateRootParent(y, x);
+		}
 		x.getRight().setParent(x);
 		y.getLeft().setParent(y);
 		//update size, height & balance factor
@@ -133,8 +123,13 @@ public class AVLTree {
 		IAVLNode y = x.getLeft();
 		x.setLeft(y.getRight());
 		y.setRight(x);
-		y.setParent(x.getParent());
-		updateRootParent(y,x);
+		if (x.getParent() == null){
+			this.root = y;
+		}
+		else {
+			y.setParent(x.getParent());
+			updateRootParent(y, x);
+		}
 		x.getLeft().setParent(x);
 		y.getRight().setParent(y);
 		update(x);
@@ -152,71 +147,45 @@ public class AVLTree {
 		}
 		else{
 			IAVLNode newNode = new AVLNode(k, i); //node will be inserted as leaf with 2 virtual sons
-			newNode.setLeft(new AVLNode(-1, null)); // duplicate code - create separate method
-			newNode.getLeft().setHeight(-1); //consider creating new object virtualNode - gets parent
-											//node as argument
-			newNode.getLeft().setParent(newNode);
-			newNode.setRight(new AVLNode(-1, null));
-			newNode.getRight().setHeight(-1);
-			newNode.getRight().setParent(newNode);
+			newNode.setVirtualSons();
 			bstInsert(newNode);
-			newNode.setHeight(0); //add to constructor? (default height, balance, size = 0)
 			IAVLNode x = newNode.getParent();
 			IAVLNode y = newNode;
 			IAVLNode z = newNode.getLeft();
 			int actions = 0; //counts # of actions taken to balance tree
-			while (x!=null){ //change to get balance
-				boolean promotedHeight = false;
-				if (x.getHeight() == y.getHeight()){
-					x.setHeight(x.getHeight()+1); //promote x's height
-					promotedHeight = true;
-					actions+=1;
-				}
-				if (Math.abs(x.getBalance())<2){
-					if (!promotedHeight) { //balance is valid and no need to promote ancestors
-						return actions;
+			while (x!=null){
+				if (Math.abs(x.getBalance())>2){ //need to rotate
+					if (x.getBalance()>1 && z.getKey()>y.getKey()){ //LR
+						x.setLeft(leftRotate(x.getLeft()));
+						x = rightRotate(x);
+						actions +=5; //two rotations + 3 promotions/demotions
 					}
-					else{ //continue loop to check if more balancing is needed
-						z = y;
-						y = x;
-						x = x.getParent();
+					if (x.getBalance()>1 && z.getKey()<y.getKey()){ //LL
+						x = rightRotate(x);
+						actions += 3; // one rotations + 2 promotions/demotions
 					}
-				}
-				else{
-					if (x.getBalance()<-1 && y.getKey()>z.getKey()){ //RL rotate
+					if (x.getBalance()<-1 && z.getKey()<y.getKey()){ //RL
 						x.setRight(rightRotate(x.getRight()));
 						x = leftRotate(x);
-						actions += 2;
+						actions += 5;
 					}
-					else if (x.getBalance()<-1 && y.getKey()<z.getKey()){ //RR rotate
+					if (x.getBalance()<-1 && z.getKey()>y.getKey()){ //RR
 						x = leftRotate(x);
-						actions +=1;
+						actions +=3;
 					}
-					else if (x.getBalance()>1 && z.getKey()>y.getKey()){//LR rotate
-						int beforeHeight1 = x.getLeft().getHeight(); //height of root before
-						int beforeHeight2 = x.getLeft().getRight().getHeight(); //height of y before
-						x.setLeft(leftRotate(x.getLeft()));
-						int afterHeight1 = x.getLeft().getLeft().getHeight();
-						int afterHeight2 = x.getLeft().getHeight();
-						if (afterHeight1 != beforeHeight1) {//promoted or demoted
-							actions +=1;
-						}
-						if (afterHeight2 != beforeHeight2){
-							actions += 1;
-						}
-						x = rightRotate(x);
-						actions += 2;
-					}
-					else if (x.getBalance()>1 && z.getKey()<y.getKey()){//LL rotate
-						x = rightRotate(x);
-						actions +=1;
-					}
-					z=y;
-					y=x;
-					x=x.getParent();
+					return actions; //once rotation has occurred tree is balanced
+				}
+				else if (x.getHeight() == y.getHeight()){
+					x.setHeight(); //promotes x's height
+					actions +=1;
+					z = y;
+					y = x;
+					x = x.getParent(); //continue loop to check if more balancing is required
+				}
+				else{ //heights and balance factors are legal - tree is balanced
+					return actions;
 				}
 			}
-
 		}
 	return 0;
 	}
@@ -363,6 +332,7 @@ public class AVLTree {
 		public void setBalance(int balance); //sets balance factor of node
 		public void setBalance(); //sets balance factor via children
 		public int getBalance(); //return balance factor of node
+		public void setVirtualSons(); //sets two virtual for new leaf node
 	}
 
 	/**
@@ -389,6 +359,12 @@ public class AVLTree {
 			this.info = info;
 		}
 
+		public AVLNode(int key, String info, int height){
+			this.key = key;
+			this.info = info;
+			this.height = height;
+		}
+
 		public int getKey()
 		{
 
@@ -402,6 +378,7 @@ public class AVLTree {
 		public void setLeft(IAVLNode node)
 		{
 			this.left = node;
+			this.left.setParent(this);
 
 		}
 		public IAVLNode getLeft()
@@ -412,6 +389,7 @@ public class AVLTree {
 		public void setRight(IAVLNode node)
 		{
 			this.right = node;
+			this.right.setParent(this);
 
 		}
 		public IAVLNode getRight()
@@ -470,6 +448,11 @@ public class AVLTree {
 
 		public int getBalance(){
 			return this.balance;
+		}
+
+		public void setVirtualSons(){
+			this.right = new AVLNode(-1, null, -1);
+			this.left = new AVLNode(-1, null, -1);
 		}
 	}
 
