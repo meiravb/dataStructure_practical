@@ -146,9 +146,10 @@ public class AVLTree {
 			return -1;
 		}
 		else{
-			IAVLNode newNode = new AVLNode(k, i); //node will be inserted as leaf with 2 virtual sons
-			newNode.setVirtualSons();
-			bstInsert(newNode);
+			IAVLNode newNode = new AVLNode(k, i);
+			newNode.setVirtualSons(); //node will be inserted as leaf with 2 virtual sons
+			bstInsert(newNode); //regular BST insert
+			//insertion has completed - start balancing
 			IAVLNode x = newNode.getParent();
 			IAVLNode y = newNode;
 			IAVLNode z = newNode.getLeft();
@@ -332,7 +333,7 @@ public class AVLTree {
 		public void setBalance(int balance); //sets balance factor of node
 		public void setBalance(); //sets balance factor via children
 		public int getBalance(); //return balance factor of node
-		public void setVirtualSons(); //sets two virtual for new leaf node
+		public void setVirtualSons(); //sets two virtual sons for new leaf node
 	}
 
 	/**
@@ -453,6 +454,8 @@ public class AVLTree {
 		public void setVirtualSons(){
 			this.right = new AVLNode(-1, null, -1);
 			this.left = new AVLNode(-1, null, -1);
+			this.right.setParent(this);
+			this.left.setParent(this);
 		}
 	}
 
