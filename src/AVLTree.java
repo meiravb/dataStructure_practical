@@ -9,6 +9,7 @@
 
 public class AVLTree {
 	private IAVLNode root;
+	static final int COUNT = 10;
 
 	/**
 	 * public boolean empty()
@@ -36,6 +37,21 @@ public class AVLTree {
 
 	}
 
+	public IAVLNode searchNodeRec(int k, IAVLNode root){
+		if(root.getKey() == k)
+			return root;
+		if(root.getKey() == -1)
+			return null;
+
+		if(k < root.getKey()){
+			return searchNodeRec(k, root.getLeft());
+		}
+		else {
+			return searchNodeRec(k, root.getRight());
+		}
+
+	}
+
 	/**
 	 * public String search(int k)
 	 *
@@ -44,8 +60,190 @@ public class AVLTree {
 	 */
 	public String search(int k)
 	{
+		//the case when the tree is empty
+		if(this.empty())
+			return null;
+		return searchRec(k, this.root);
+	}
 
-		return "42";
+	public IAVLNode searchNode(int k)
+	{
+		//the case when the tree is empty
+		if(this.empty())
+			return null;
+		return searchNodeRec(k, this.root);
+	}
+
+
+	public IAVLNode minNode(IAVLNode root){
+		while (root.getLeft().isRealNode())
+			root = root.getLeft();
+		return root;
+	}
+
+	public void switchPosition(IAVLNode x, IAVLNode y){
+		if(x.getParent() == null)
+			this.root = y;
+		else if(equals(x, x.getParent().getLeft()))
+			x.getParent().setLeft(y);
+		else
+			x.getParent().setRight(y);
+		if(y != null)
+			y.setParent(x.getParent());
+
+	}
+
+	public IAVLNode returnCurrParent(IAVLNode node){
+		if(node.getParent() == null){
+			return this.root;
+		}
+		return node.getParent();
+	}
+
+	public int maxHeight(int h1, int h2){
+		if(h1 >= h2)
+			return h1;
+		return h2;
+	}
+
+	public int leftRotation(IAVLNode node){
+		IAVLNode rightChild = node.getRight();
+		node.setRight(rightChild.getLeft());
+		rightChild.getLeft().setParent(node);
+		rightChild.setParent(node.getParent());
+		if(node.getParent() == null)
+			this.root = rightChild;
+		else if(equals(node.getParent().getLeft(), node))
+			node.getParent().setLeft(rightChild);
+		else
+			node.getParent().setRight(rightChild);
+		rightChild.setLeft(node);
+		node.setParent(rightChild);
+		int prevNodeHeight = node.getHeight();
+		int prevChildHeigh = rightChild.getHeight();
+		update(node);
+		update(rightChild);
+		int nodeHeightDiff = Math.abs(prevNodeHeight - node.getHeight());
+		int rightHeightDiff = Math.abs(prevChildHeigh - rightChild.getHeight());
+		return nodeHeightDiff + rightHeightDiff;
+	}
+
+	public int rightRotation(IAVLNode node){
+		IAVLNode leftChild = node.getLeft();
+		node.setRight(leftChild.getRight());
+		leftChild.getRight().setParent(node);
+		leftChild.setParent(node.getParent());
+		if(node.getParent() == null)
+			this.root = leftChild;
+		else if(equals(node.getParent().getLeft(), node))
+			node.getParent().setRight(leftChild);
+		else
+			node.getParent().setLeft(leftChild);
+		leftChild.setRight(node);
+		node.setParent(leftChild);
+		int prevNodeHeight = node.getHeight();
+		int prevChildHeigh = leftChild.getHeight();
+		update(node);
+		update(leftChild);
+		int nodeHeightDiff = Math.abs(prevNodeHeight - node.getHeight());
+		int leftHeightDiff = Math.abs(prevChildHeigh - leftChild.getHeight());
+		return nodeHeightDiff + leftHeightDiff;
+	}
+
+	public int balance(IAVLNode node){
+		int amountOfBalances = 0;
+		while (!node.isBalanced() && node != null){
+			if(node.getBalance() == 2){
+				if(node.getHeightDif(node.getLeft()) == 3){
+					if(node.getRight().getBalance() == 0){
+						IAVLNode y = leftRotate(node);
+						node = y.getRight();
+						amountOfBalances++;
+					}
+					else if(node.getRight().getBalance() == 1){
+						IAVLNode rightChild = node.getRight();
+						if(rightChild.getHeightDif(rightChild.getLeft()) == 2 && rightChild.getHeightDif(rightChild.getRight()) == 1){
+							node = leftRotate(node);
+							amountOfBalances+=3;
+						}
+						else{
+							node = rightRotate(node.getRight());
+							node = leftRotate(node.getParent());
+							amountOfBalances += 6;
+						}
+
+					}
+				}
+				else if(node.getHeightDif(node.getRight()) == 3){
+					if(node.getRight().getBalance() == 0){
+						IAVLNode y = rightRotate(node);
+						node = y.getLeft();
+						amountOfBalances++;
+					}
+					if(node.getRight().getBalance() == 1){
+						IAVLNode leftChild = node.getLeft();
+						if(leftChild.getHeightDif(leftChild.getLeft()) == 1 && leftChild.getHeightDif(leftChild.getRight()) == 2){
+							node = rightRotate(node);
+							amountOfBalances+=3;
+						}
+						else{
+							node = leftRotate(node.getRight());
+							node = rightRotate(node.getParent());
+							amountOfBalances += 6;
+						}
+
+					}
+
+				}
+			else{
+				update(node);
+				amountOfBalances++;
+				}
+				node = node.getParent();
+			}
+
+		}
+		return amountOfBalances;
+
+	}
+
+	public IAVLNode deleteBst(IAVLNode node){
+
+		IAVLNode parentToCheck = null;
+		if(!node.getLeft().isRealNode()){
+			switchPosition(node, node.getRight());
+			parentToCheck = returnCurrParent(node.getRight());
+		}
+		else if(!node.getRight().isRealNode()){
+			switchPosition(node, node.getLeft());
+			parentToCheck = returnCurrParent(node.getLeft());
+		}
+		else{
+			IAVLNode succ = minNode(node.getRight());
+			parentToCheck = returnCurrParent(succ);
+			if(!equals(succ.getParent(), node)){
+				switchPosition(succ, succ.getRight());
+				succ.setRight(node.getRight());
+				succ.getRight().setParent(succ);
+
+			}
+			switchPosition(node, succ);
+			succ.setLeft(node.getLeft());
+			succ.getLeft().setParent(succ);
+			update(succ);
+		}
+		if(parentToCheck != null){
+			update(parentToCheck);
+
+		}
+
+		return parentToCheck;
+
+	}
+
+	private boolean equals(IAVLNode x, IAVLNode y) {
+		return x.getKey() == y.getKey();
+
 	}
 
 	/**
@@ -137,6 +335,36 @@ public class AVLTree {
 		return y;
 	}
 
+	static void print2DUtil(IAVLNode root, int space)
+	{
+		// Base case
+		if (root == null)
+			return;
+
+		// Increase distance between levels
+		space += COUNT;
+
+		// Process right child first
+		print2DUtil(root.getRight(), space);
+
+		// Print current node after space
+		// count
+		System.out.print("\n");
+		for (int i = COUNT; i < space; i++)
+			System.out.print(" ");
+		System.out.print(root.getKey() + "\n");
+
+		// Process left child
+		print2DUtil(root.getLeft(), space);
+	}
+
+	// Wrapper over print2DUtil()
+	static void print2D(IAVLNode root)
+	{
+		// Pass initial space count as 0
+		print2DUtil(root, 0);
+	}
+
 	public int insert(int k, String i) {
 		if (this.empty()){ //tree is empty
 			this.root = new AVLNode(k, i); //node inserted is the root
@@ -191,6 +419,10 @@ public class AVLTree {
 	return 0;
 	}
 
+	private int getDifference(IAVLNode n){
+		return n.getRight().getHeight()-n.getLeft().getHeight();
+	}
+
 	/**
 	 * public int delete(int k)
 	 *
@@ -203,7 +435,22 @@ public class AVLTree {
 	//Meirav
 	public int delete(int k)
 	{
-		return 42;	// to be replaced by student code
+		int balanceOpCounter = 0;
+		if(searchNode(k) == null)
+			return -1;
+		IAVLNode deletedNode = searchNode(k);
+		IAVLNode currParent = deleteBst(deletedNode);
+		if(currParent.isBalanced()){
+			if(currParent.getParent() == null)
+				return 0;
+			if(currParent.getParent().isBalanced())
+				return 0;
+			else
+				balanceOpCounter = balance(currParent.getParent());
+		}
+		else
+			balanceOpCounter = balance(currParent);
+		return balanceOpCounter;
 	}
 
 	/**
@@ -334,6 +581,8 @@ public class AVLTree {
 		public void setBalance(); //sets balance factor via children
 		public int getBalance(); //return balance factor of node
 		public void setVirtualSons(); //sets two virtual sons for new leaf node
+		public int getHeightDif(IAVLNode child);
+		public boolean isBalanced();
 	}
 
 	/**
@@ -457,8 +706,43 @@ public class AVLTree {
 			this.right.setParent(this);
 			this.left.setParent(this);
 		}
+		public int getHeightDif(IAVLNode child){
+			return this.getHeight() - child.getHeight();
+		};
+		public boolean isBalanced(){
+			if(this.getBalance() != 0 && this.getBalance() != 1 &&this.getBalance() != -1)
+				return false;
+			if(this.getHeightDif(this.getLeft()) == 2 && this.getHeightDif(this.getRight()) == 2)
+				return false;
+			return true;
+		};
 	}
 
+
+	public static void main(String args[]){
+
+		AVLTree newAVLtree = new AVLTree();
+		newAVLtree.insert(1, "bla");
+		newAVLtree.insert(2, "bla");
+		newAVLtree.insert(3, "bla");
+		newAVLtree.insert(4, "bla");
+		newAVLtree.insert(5, "bla");
+		newAVLtree.insert(6, "bla");
+		newAVLtree.insert(7, "bla");
+		newAVLtree.insert(8, "bla");
+		newAVLtree.insert(9, "bla");
+		newAVLtree.insert(10, "bla");
+		newAVLtree.insert(11, "bla");
+		newAVLtree.insert(12, "bla");
+		newAVLtree.insert(13, "bla");
+		newAVLtree.insert(14, "bla");
+		newAVLtree.insert(15, "bla");
+
+
+
+		print2D(newAVLtree.root);
+
+	}
 }
   
 
