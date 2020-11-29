@@ -207,20 +207,6 @@ public class AVLTree {
 		}
 		return amountOfBalances;
 
-/*		if(node.getBalance() == 1)
-			return 0;
-		if(node.getBalance() == 2){
-			if(node.getHeightDif(node.getLeft()) == 3){
-				amountOfBalances++;
-				amountOfBalances = amountOfBalances + leftRotation(node);
-			}
-			else {
-				amountOfBalances++;
-				amountOfBalances = amountOfBalances + rightRotation(node);
-			}
-			return amountOfBalances;
-		}*/
-
 	}
 
 
@@ -299,49 +285,7 @@ public class AVLTree {
 		return n.getRight().getHeight()-n.getLeft().getHeight();
 	}
 
-	public int insert(int k, String i) {
-		if (this.empty()){ //tree is empty
-			this.root = new AVLNode(k, i); //node inserted is the root
-			return 0;
-		}
-		else if (this.search(k) != null){ //node with key k already exists
-			return -1;
-		}
-		else{
-			IAVLNode newNode = new AVLNode(k, i); //node will be inserted as leaf with 2 virtual sons
-			newNode.setLeft(new AVLNode(-1, null));
-			newNode.getLeft().setHeight(-1);
-			newNode.setRight(new AVLNode(-1, null));
-			newNode.getRight().setHeight(-1);
-			bstInsert(newNode);
-			newNode.setHeight(0);
-			IAVLNode y = newNode.getParent();
-			IAVLNode z = newNode;
-			int actions = 0; //counts # of actions taken to balance tree
-			while (y.getParent()!=null){
-				boolean promotedHeight = false;
-				if (z.getHeight() == y.getHeight()){
-					y.setHeight(y.getHeight()+1); //promote y's height
-					promotedHeight = true;
-					actions+=1;
-				}
-				if (Math.abs(getDifference(y))<2){
-					if (!promotedHeight) { //difference is valid and no need to promote ancestors
-						return actions;
-					}
-					else{
-						z = y;
-						y = y.getParent(); //continue loop to check if more promotions are necessary
-					}
-				}
-				else{
 
-				}
-			}
-
-		}
-
-	}
 
 
 	/**
