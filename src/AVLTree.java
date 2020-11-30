@@ -107,6 +107,13 @@ public class AVLTree {
 		return h2;
 	}
 
+	public void updateTillRoot(IAVLNode node){
+		while (node != null){
+			update(node);
+			node = node.getParent();
+		}
+	}
+
 
 	public int balanceWithNewBalance(IAVLNode node){
 		int amountOfBalances = 0;
@@ -158,9 +165,9 @@ public class AVLTree {
 				amountOfBalances++;
 			}
 			node = node.getParent();
-
-
 		}
+
+		updateTillRoot(node);
 		return amountOfBalances;
 
 	}
