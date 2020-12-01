@@ -9,6 +9,8 @@
 
 public class AVLTree {
 	private IAVLNode root;
+	private IAVLNode min;
+	private IAVLNode max;
 
 	/**
 	 * public boolean empty()
@@ -67,7 +69,7 @@ public class AVLTree {
 											// O(height of tree) = O(logn)
 		IAVLNode x = this.root;
 		IAVLNode y = null;
-		while (x.getKey() != -1){ //while x is a real node
+		while (x != null){
 			y = x;
 			if (x.getKey() > k)
 				x = x.getLeft();
@@ -82,14 +84,18 @@ public class AVLTree {
 		z.setParent(y);
 		if (z.getKey()<y.getKey())
 			y.setLeft(z);
-
 		else
 			y.setRight(z);
+		if (z.getKey()<this.min.getKey()) //check if min/max need to be updated
+			this.min = z;
+		if (z.getKey()>this.max.getKey())
+			this.max = z;
 	}
 
 	private void setRootParent(IAVLNode xParent, IAVLNode y) { //y is the new root, x is the old root
 		if (xParent == null) {
 			this.root = y;
+			y.setParent(null);
 		} else {
 			if (y.getKey() < xParent.getKey()) {
 				xParent.setLeft(y);
@@ -130,8 +136,11 @@ public class AVLTree {
 
 	public int insert(int k, String i) {
 		if (this.empty()){ //tree is empty
-			this.root = new AVLNode(k, i); //node inserted is the root
-			this.root.setVirtualSons();
+			IAVLNode node = new AVLNode(k, i);
+			this.root = node; //node inserted is the root
+			node.setVirtualSons();
+			this.min = node;
+			this.max = node;
 			return 0;
 		}
 		else if (this.search(k) != null){ //node with key k already exists
@@ -206,9 +215,9 @@ public class AVLTree {
 	 * or null if the tree is empty
 	 */
 	//Daniella
-	public String min()
+	public String min() //O(1)
 	{
-		return "42"; // to be replaced by student code
+		return this.min.getInfo();
 	}
 
 	/**
