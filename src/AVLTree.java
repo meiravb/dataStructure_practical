@@ -249,7 +249,7 @@ public class AVLTree {
 	private void setRootParent(IAVLNode xParent, IAVLNode y) { //y is the new root, x is the old root
 		if (xParent == null) {
 			this.root = y;
-			//y.setParent(xParent);
+			y.setParent(xParent);
 		} else {
 			if (y.getKey() < xParent.getKey()) {
 				xParent.setLeft(y);
@@ -684,6 +684,23 @@ public class AVLTree {
 		};
 	}
 
+
+	public static void main(String[] args){
+		AVLTree tree = new AVLTree();
+		tree.insert(1, "bb");
+		tree.insert(2, "cc");
+		//tree.insert(4, "rr");
+		tree.insert(5, "tt");
+		tree.insert(6, "bgtrb");
+		tree.insert(7, "bgtrb");
+		tree.insert(8, "bgtrb");
+		tree.insert(9, "bb");
+		//tree.insert(10, "rg");
+		tree.insert(11, "grgg");
+		tree.insert(3, "grgg");
+		printPreorder(tree.root);
+
+	}
 }
   
 
