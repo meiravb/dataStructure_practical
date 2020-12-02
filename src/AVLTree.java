@@ -244,8 +244,21 @@ public class AVLTree {
 	//Meirav
 	public int[] keysToArray()
 	{
-		int[] arr = new int[42]; // to be replaced by student code
-		return arr;              // to be replaced by student code
+		int[] arr = new int[this.root.getSize()]; // to be replaced by student code
+		int i = 0;
+		Stack<IAVLNode> s = new Stack<>();
+		IAVLNode current = this.root;
+		while (current.getKey()!=-1 || s.size()>0){
+			while (current.getKey() != -1){
+				s.push(current);
+				current = current.getLeft();
+			}
+			current = s.pop();
+			arr[i] = current.getKey();
+			i++;
+			current = current.getRight();
+		}
+		return arr;
 	}
 
 	/**
@@ -258,7 +271,6 @@ public class AVLTree {
 	//Daniella
 	public String[] infoToArray()
 	{
-		this.root.setSize();
 		String[] arr = new String[this.root.getSize()];
 		int i = 0;
 		Stack<IAVLNode> s = new Stack<>();

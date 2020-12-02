@@ -12,6 +12,7 @@ public class test {
         t.insert(17, "17");
         //System.out.println(t.g);
         System.out.println(Arrays.toString(t.infoToArray()));
+        System.out.println(Arrays.toString(t.keysToArray()));
 
         System.out.println("key - "+ t.getRoot().getKey()+", height - "+t.getRoot().getHeight()+" balance - "+t.getRoot().getBalance()+ " size - " + t.getRoot().getSize());
         System.out.println("key - "+ t.getRoot().getLeft().getKey()+", height - "+t.getRoot().getLeft().getHeight()+" balance - "+t.getRoot().getLeft().getBalance()+ " size - " + t.getRoot().getLeft().getSize());
