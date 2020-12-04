@@ -379,6 +379,20 @@ public class AVLTree {
 		return n.getRight().getHeight()-n.getLeft().getHeight();
 	}
 
+	private IAVLNode searchForMin(IAVLNode root){
+		while (root != null){
+			root = root.getLeft();
+		}
+		return root;
+	}
+
+	private IAVLNode searchForMax(IAVLNode root){
+		while(root != null){
+			root = root.getRight();
+		}
+		return root;
+	}
+
 
 	/**
 	 * public int delete(int k)
@@ -404,6 +418,13 @@ public class AVLTree {
 		else {
 			balanceOpCounter = balanceWithNewBalance(currParent);
 		}
+		if(k == this.min.getKey()){
+			this.min = searchForMin(this.root);
+		}
+		if(k == this.max.getKey()){
+			this.max = searchForMax(this.root);
+		}
+
 		return balanceOpCounter;
 	}
 
@@ -499,6 +520,84 @@ public class AVLTree {
 	{
 		return null;
 	}
+
+
+	public void insertBalance(IAVLNode node){
+
+	}
+
+	public IAVLNode getMax(){
+		return this.max;
+	}
+
+	public IAVLNode getMin(){
+		return this.min;
+	}
+
+	public void setRoot(IAVLNode newRoot){
+		this.root = newRoot;
+		newRoot.setParent(null);
+	}
+
+	public IAVLNode findNodeWithRankLessThen(int rank){
+		IAVLNode node = this.getRoot();
+		while (node.getHeight() > rank){
+			node = node.getLeft();
+		}
+		return node;
+	}
+
+	public IAVLNode findNodeWithRankLessThenRight(int rank){
+		IAVLNode node = this.getRoot();
+		while (node.getHeight() > rank){
+			node = node.getRight();
+		}
+		return node;
+	}
+
+	public void insertXForJoining(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot){
+		x.setLeft(otherRoot);
+		x.setRight(joinNode);
+		joinNode.getParent().setLeft(x);
+		x.setParent(joinNode.getParent());
+		otherRoot.setParent(x);
+		joinNode.setParent(x);
+
+	}
+
+	public void insertForJoiningRight(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot){
+		x.setRight(otherRoot);
+		x.setLeft(joinNode);
+		joinNode.getParent().setRight(x);
+		x.setParent(joinNode.getParent());
+		otherRoot.setParent(x);
+		joinNode.setParent(x);
+	}
+
+	public void updateThisTreeWhenThisIsHigherAndBigger(AVLTree t, IAVLNode x){
+		int smallerRank = t.getRoot().getHeight();
+		IAVLNode joinNode = this.findNodeWithRankLessThen(smallerRank);
+		this.insertXForJoining(x, joinNode, t.getRoot());
+		update(x);
+		update(x.getParent());
+		insertBalance(x);
+	}
+
+	public void updateThisTreeWhenThisIsShorterAndSmaller(AVLTree t, IAVLNode x){
+		int smallerRank = this.getRoot().getHeight();
+		IAVLNode joinNode = t.findNodeWithRankLessThenRight(smallerRank);
+		t.insertForJoiningRight(x, joinNode, this.getRoot());
+		update(x);
+		update(x.getParent());
+		insertBalance(x);
+	}
+
+	public void updateTreeWhenRankEqual(AVLTree leftTree, AVLTree rightTree, IAVLNode x){
+		x.setLeft(leftTree.getRoot());
+		x.setRight(rightTree.getRoot());
+		this.setRoot(x);
+		update(x);
+	}
 	/**
 	 * public join(IAVLNode x, AVLTree t)
 	 *
@@ -510,7 +609,53 @@ public class AVLTree {
 	//Meirav
 	public int join(IAVLNode x, AVLTree t)
 	{
-		return 0;
+		int timeComplex = 0;
+		if(this.empty() && t.empty()){
+			this.root = x;
+			timeComplex = 1;
+		}
+
+		else if(this.empty() && !t.empty()){
+			t.insert(x.getKey(), x.getInfo());
+			this.root = t.getRoot();
+			timeComplex = t.getRoot().getHeight() + 1;
+		}
+		else if(!this.empty() && t.empty()){
+			this.insert(x.getKey(), x.getInfo());
+			timeComplex = this.getRoot().getHeight() + 1;
+		}
+		else{
+			if(t.getMax().getKey() < this.getMin().getKey()){
+				if(t.getRoot().getHeight() < this.getRoot().getHeight()){
+					this.updateThisTreeWhenThisIsHigherAndBigger(t, x);
+				}
+				else if(t.getRoot().getHeight() > this.getRoot().getHeight()){
+					this.updateThisTreeWhenThisIsShorterAndSmaller(t,x);
+					this.setRoot(t.getRoot());
+				}
+				else {
+					this.updateTreeWhenRankEqual(t, this, x);
+				}
+			}
+			else if(t.getMin().getKey() > this.getMax().getKey()){
+				if(t.getRoot().getHeight() > this.getRoot().getHeight()){
+					t.updateThisTreeWhenThisIsHigherAndBigger(this, x);
+					this.setRoot(t.getRoot());
+				}
+				else if(t.getRoot().getHeight() < this.getRoot().getHeight()){
+					t.updateThisTreeWhenThisIsShorterAndSmaller(this, x);
+
+				}
+				else{
+					this.updateTreeWhenRankEqual(this, t, x);
+				}
+
+			}
+
+			timeComplex = Math.abs(this.root.getHeight() - t.getRoot().getHeight()) + 1;
+
+		}
+		return timeComplex;
 	}
 
 	/**
@@ -686,7 +831,9 @@ public class AVLTree {
 
 
 	public static void main(String[] args){
+		//IAVLNode joinNode = new AVLNode(4, "info");
 		AVLTree tree = new AVLTree();
+		/*
 		tree.insert(1, "bb");
 		tree.insert(2, "cc");
 		//tree.insert(4, "rr");
@@ -697,7 +844,19 @@ public class AVLTree {
 		tree.insert(9, "bb");
 		//tree.insert(10, "rg");
 		tree.insert(11, "grgg");
-		tree.insert(3, "grgg");
+		tree.insert(3, "grgg");*/
+		tree.insert(7, "bb");
+		tree.insert(5, "aa");
+		tree.insert(10, "ss");
+		tree.insert(8, "dd");
+
+		AVLTree tree2 = new AVLTree();
+		tree2.insert(2, "bb");
+		tree2.insert(1, "bb");
+		tree2.insert(3, "bb");
+		String info = "info";
+		//IAVLNode joinNode = new AVLNode(4, info);
+		//tree.join(joinNode,tree2);
 		printPreorder(tree.root);
 
 	}
