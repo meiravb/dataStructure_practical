@@ -83,6 +83,7 @@ public class AVLTree {
 
 	private void bstInsert(IAVLNode z){ //regular insert to bst - before balancing
 		IAVLNode y = findParent(z.getKey());
+		z.setParent(y);
 		if (z.getKey()<y.getKey())
 			y.setLeft(z);
 		else
@@ -99,6 +100,7 @@ public class AVLTree {
 			y.setParent(null);
 		}
 		else {
+			y.setParent(xParent);
 			if (y.getKey() < xParent.getKey()) {
 				xParent.setLeft(y);
 			} else {
@@ -120,6 +122,8 @@ public class AVLTree {
 		y.setLeft(x);
 		//rotation has completed - update parents, size, height and balance
 		setRootParent(xParent, y);
+		x.getRight().setParent(x);
+		y.getLeft().setParent(y);
 		update(x);
 		update(y);
 		return y; //return new root of subtree
@@ -131,6 +135,8 @@ public class AVLTree {
 		x.setLeft(y.getRight());
 		y.setRight(x);
 		setRootParent(xParent, y);
+		x.getLeft().setParent(x);
+		y.getRight().setParent(y);
 		update(x);
 		update(y);
 		return y;
@@ -244,7 +250,7 @@ public class AVLTree {
 	//Meirav
 	public int[] keysToArray()
 	{
-		int[] arr = new int[this.root.getSize()]; // to be replaced by student code
+		int[] arr = new int[this.root.getSize()]; // add empty tree case
 		int i = 0;
 		Stack<IAVLNode> s = new Stack<>();
 		IAVLNode current = this.root;
@@ -271,7 +277,7 @@ public class AVLTree {
 	//Daniella
 	public String[] infoToArray()
 	{
-		String[] arr = new String[this.root.getSize()];
+		String[] arr = new String[this.root.getSize()]; //add empty tree case
 		int i = 0;
 		Stack<IAVLNode> s = new Stack<>();
 		IAVLNode current = this.root;
@@ -412,7 +418,6 @@ public class AVLTree {
 		public void setLeft(IAVLNode node)
 		{
 			this.left = node;
-			this.left.setParent(this);
 
 		}
 		public IAVLNode getLeft()
@@ -423,7 +428,6 @@ public class AVLTree {
 		public void setRight(IAVLNode node)
 		{
 			this.right = node;
-			this.right.setParent(this);
 
 		}
 		public IAVLNode getRight()
@@ -488,6 +492,8 @@ public class AVLTree {
 		public void setVirtualSons(){
 			this.setRight(new AVLNode(-1, null, -1, 0));
 			this.setLeft(new AVLNode(-1, null, -1, 0));
+			this.right.setParent(this);
+			this.left.setParent(this);
 		}
 	}
 
