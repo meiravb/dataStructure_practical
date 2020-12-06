@@ -531,7 +531,37 @@ public class AVLTree {
 	//Daniella
 	public AVLTree[] split(int x)
 	{
-		return null;
+		AVLTree smaller = new AVLTree();
+		AVLTree greater = new AVLTree();
+		IAVLNode s = searchNode(x);
+		if (s.getLeft().isRealNode()){
+		smaller.root = s.getLeft();
+		}
+		if (s.getRight().isRealNode()){
+			greater.root = s.getRight();
+		}
+		while (s!=null){
+			if (s.getKey()>s.getParent().getKey()){ //s is a right son
+				if (s.getParent().getLeft().isRealNode()) { //s.parent has a left son
+					AVLTree t = new AVLTree();
+					t.root = s.getParent().getLeft(); //t is the subtree whose root is s.parent.left
+					smaller.join(s.getParent(), t);
+				}
+			}
+			else{ //s is a left son
+				if (s.getParent().getRight().isRealNode()){ //s.parent has a right son
+					AVLTree t = new AVLTree();
+					t.root = s.getParent().getRight(); //t is the subtree whose root is s.parent.right
+					greater.join(s.getParent(), t);
+				}
+			}
+			s = s.getParent(); //continue loop until root is reached
+		}
+		AVLTree[] arr = new AVLTree[2];
+		arr[0] = smaller;
+		arr[1] = greater;
+
+		return arr;
 	}
 	/**
 	 * public join(IAVLNode x, AVLTree t)
