@@ -263,6 +263,7 @@ public class AVLTree {
 			} else {
 				xParent.setRight(y);
 			}
+			y.setParent(xParent);
 		}
 	}
 
@@ -391,14 +392,14 @@ public class AVLTree {
 	}
 
 	private IAVLNode searchForMin(IAVLNode root){
-		while (root != null){
+		while (root.getLeft().isRealNode()){
 			root = root.getLeft();
 		}
 		return root;
 	}
 
 	private IAVLNode searchForMax(IAVLNode root){
-		while(root != null){
+		while(root.getRight().isRealNode()){
 			root = root.getRight();
 		}
 		return root;
@@ -571,12 +572,18 @@ public class AVLTree {
 				node = leftRotate(node);
 			}
 			else if(node.getBalance() == 2 && node.getLeft().getBalance() == -1){
-				node = leftRotate(node.getLeft().getRight());
+				node = leftRotate(node.getLeft());
 				node = rightRotate(node.getParent());
 			}
 			else if(node.getBalance() == -2 && node.getLeft().getBalance() == 1){
-				node = rightRotate(node.getLeft().getRight());
+				node = rightRotate(node.getLeft());
 				node = leftRotate(node.getParent());
+			}
+			else if(node.getBalance() == 2 && node.getLeft().getBalance() == 0){
+				node = rightRotate(node);
+			}
+			else if(node.getBalance() == -2 && node.getRight().getBalance() == 0){
+				node = leftRotate(node);
 			}
 			else{
 				update(node);
@@ -696,6 +703,8 @@ public class AVLTree {
 			timeComplex = this.getRoot().getHeight() + 1;
 		}
 		else{
+			int thisBeforeHeight = this.getRoot().getHeight();
+			int otherBeforeHeight = t.getRoot().getHeight();
 			if(t.getMax().getKey() < this.getMin().getKey()){
 				if(t.getRoot().getHeight() < this.getRoot().getHeight()){
 					this.updateThisTreeWhenThisIsHigherAndBigger(t, x);
@@ -725,7 +734,7 @@ public class AVLTree {
 
 			}
 
-			timeComplex = Math.abs(this.root.getHeight() - t.getRoot().getHeight()) + 1;
+			timeComplex = Math.abs(thisBeforeHeight - otherBeforeHeight) + 1;
 
 		}
 		return timeComplex;
