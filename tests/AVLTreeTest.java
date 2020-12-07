@@ -6,11 +6,37 @@ class AVLTreeTest extends AVLTree {
 
     @Test
     public void insertTest(){
+        AVLTree inserFirstTest = new AVLTree();
+        assertEquals(0, inserFirstTest.insert(10, "info10"), "no balance is needed");
+        assertEquals(1, inserFirstTest.insert(20, "info20"), "no balance is needed");
+        assertEquals(5, inserFirstTest.insert(15, "info15"), "double rotation with demotion of 20,10 and promotion of 15");//6
+        assertEquals(1, inserFirstTest.insert(25, "info25"), "single promotion of 15");
+        assertEquals(2, inserFirstTest.insert(30, "info30"), "single left rotation of 20 and demote of 20");//4
+        assertEquals(6, inserFirstTest.insert(16, "info16"), "promote and then double rotation");
+        assertEquals(2, inserFirstTest.insert(18, "info18"), "two promotions of 15 and 10");//1
+        assertEquals(2, inserFirstTest.insert(19, "info19"), "two promotions of 15 and 10");//2
+
+
+
 
     }
 
     @Test
     public void deleteTest(){
+        AVLTree deleteFirstTest = new AVLTree();
+        deleteFirstTest.insert(10, "info10");
+        deleteFirstTest.insert(20, "info20");
+        deleteFirstTest.insert(15, "info15");
+        deleteFirstTest.insert(25, "info25");
+        deleteFirstTest.insert(30, "info30");
+        deleteFirstTest.insert(16, "info16");
+        deleteFirstTest.insert(18, "info18");
+        deleteFirstTest.insert(19, "info19");
+        assertEquals(6, deleteFirstTest.delete(30), "double rotation 20 demoted twice 18 promoted and 15 demoted");
+
+
+
+
 
 
 
@@ -62,7 +88,8 @@ class AVLTreeTest extends AVLTree {
         AVLTree tree7 = new AVLTree();
         tree7.insert(2, "info2");
 
-        //testing single rotation
+        //testing single left rotation (happens when adding from the right)
+        //AVLTree singleLeftRotation
 
 
 
