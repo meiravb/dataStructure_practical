@@ -22,7 +22,7 @@ public class AVLTree {
 	 */
 	public boolean empty() {
 
-		return this.root == null;
+		return this.root == null || !this.root.isRealNode();
 	}
 //Meira
 	public String searchRec(int k, IAVLNode root){
@@ -174,8 +174,17 @@ public class AVLTree {
 
 	}
 
-	public IAVLNode deleteBst(IAVLNode node){
+	public void updateMinAndMaxDelete(int k){
+		if(k == this.min.getKey()){
+			this.min = searchForMin(this.root);
+		}
+		if(k == this.max.getKey()){
+			this.max = searchForMax(this.root);
+		}
+	}
 
+	public IAVLNode deleteBst(IAVLNode node){
+		int k = node.getKey();
 		IAVLNode parentToCheck = null;
 		if(!node.getLeft().isRealNode()){
 			switchPosition(node, node.getRight());
@@ -186,7 +195,7 @@ public class AVLTree {
 			parentToCheck = returnCurrParent(node.getLeft());
 		}
 		else{
-			IAVLNode succ = minNode(node.getRight());
+			IAVLNode succ = minNode(node.getRight()); //check is can be changed with searchmin
 			parentToCheck = returnCurrParent(succ);
 			if(!equals(succ.getParent(), node)){
 				switchPosition(succ, succ.getRight());
@@ -202,7 +211,7 @@ public class AVLTree {
 			succ.getLeft().setParent(succ);
 			update(succ);
 		}
-
+		this.updateMinAndMaxDelete(k);
 		return parentToCheck;
 
 	}
@@ -392,6 +401,8 @@ public class AVLTree {
 	}
 
 	private IAVLNode searchForMin(IAVLNode root){
+		if(!root.isRealNode())
+			return root;
 		while (root.getLeft().isRealNode()){
 			root = root.getLeft();
 		}
@@ -399,6 +410,8 @@ public class AVLTree {
 	}
 
 	private IAVLNode searchForMax(IAVLNode root){
+		if(!root.isRealNode())
+			return root;
 		while(root.getRight().isRealNode()){
 			root = root.getRight();
 		}
@@ -423,6 +436,8 @@ public class AVLTree {
 			return -1;
 		IAVLNode deletedNode = searchNode(k);
 		IAVLNode currParent = deleteBst(deletedNode);
+		if(this.empty())
+			return 0;
 		int newBalance = currParent.getBeforeUpdateBalance();
 
 		if(newBalance == 1 || newBalance == -1)
@@ -430,12 +445,12 @@ public class AVLTree {
 		else {
 			balanceOpCounter = balanceWithNewBalance(currParent);
 		}
-		if(k == this.min.getKey()){
+/*		if(k == this.min.getKey()){
 			this.min = searchForMin(this.root);
 		}
 		if(k == this.max.getKey()){
 			this.max = searchForMax(this.root);
-		}
+		}*/
 
 		return balanceOpCounter;
 	}
