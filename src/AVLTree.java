@@ -252,7 +252,6 @@ public class AVLTree {
 		z.setParent(y);
 		if (z.getKey()<y.getKey())
 			y.setLeft(z);
-
 		else
 			y.setRight(z);
 		if (z.getKey()<this.min.getKey()) //check if min/max need to be updated
@@ -267,12 +266,12 @@ public class AVLTree {
 			y.setParent(null);
 		}
 		else {
+			y.setParent(xParent);
 			if (y.getKey() < xParent.getKey()) {
 				xParent.setLeft(y);
 			} else {
 				xParent.setRight(y);
 			}
-			y.setParent(xParent);
 		}
 	}
 
@@ -289,6 +288,8 @@ public class AVLTree {
 		y.setLeft(x);
 		//rotation has completed - update parents, size, height and balance
 		setRootParent(xParent, y);
+		x.getRight().setParent(x);
+		y.getLeft().setParent(y);
 		update(x);
 		update(y);
 		return y; //return new root of subtree
@@ -300,6 +301,8 @@ public class AVLTree {
 		x.setLeft(y.getRight());
 		y.setRight(x);
 		setRootParent(xParent, y);
+		x.getLeft().setParent(x);
+		y.getRight().setParent(y);
 		update(x);
 		update(y);
 		return y;
@@ -488,7 +491,7 @@ public class AVLTree {
 	//Meirav
 	public int[] keysToArray()
 	{
-		int[] arr = new int[this.root.getSize()]; // to be replaced by student code
+		int[] arr = new int[this.root.getSize()]; // add empty tree case
 		int i = 0;
 		Stack<IAVLNode> s = new Stack<>();
 		IAVLNode current = this.root;
@@ -515,7 +518,7 @@ public class AVLTree {
 	//Daniella
 	public String[] infoToArray()
 	{
-		String[] arr = new String[this.root.getSize()];
+		String[] arr = new String[this.root.getSize()]; //add empty tree case
 		int i = 0;
 		Stack<IAVLNode> s = new Stack<>();
 		IAVLNode current = this.root;
@@ -569,10 +572,38 @@ public class AVLTree {
 	//Daniella
 	public AVLTree[] split(int x)
 	{
-		return null;
+		AVLTree smaller = new AVLTree();
+		AVLTree greater = new AVLTree();
+		IAVLNode s = searchNode(x);
+		if (s.getLeft().isRealNode()){
+			smaller.root = s.getLeft();
+		}
+		if (s.getRight().isRealNode()){
+			greater.root = s.getRight();
+		}
+		while (s!=null){
+			if (s.getKey()>s.getParent().getKey()){ //s is a right son
+				if (s.getParent().getLeft().isRealNode()) { //s.parent has a left son
+					AVLTree t = new AVLTree();
+					t.root = s.getParent().getLeft(); //t is the subtree whose root is s.parent.left
+					smaller.join(s.getParent(), t);
+				}
+			}
+			else{ //s is a left son
+				if (s.getParent().getRight().isRealNode()){ //s.parent has a right son
+					AVLTree t = new AVLTree();
+					t.root = s.getParent().getRight(); //t is the subtree whose root is s.parent.right
+					greater.join(s.getParent(), t);
+				}
+			}
+			s = s.getParent(); //continue loop until root is reached
+		}
+		AVLTree[] arr = new AVLTree[2];
+		arr[0] = smaller;
+		arr[1] = greater;
+
+		return arr;
 	}
-
-
 	public void insertBalance(IAVLNode node){
 		while (node != null){
 			node.setBalance();
@@ -795,7 +826,7 @@ public class AVLTree {
 	 * This class can and must be modified.
 	 * (It must implement IAVLNode)
 	 */
-	public static class AVLNode implements IAVLNode{
+	public class AVLNode implements IAVLNode{
 		private int key;
 		private String info;
 		private IAVLNode left;
@@ -831,7 +862,6 @@ public class AVLTree {
 		public void setLeft(IAVLNode node)
 		{
 			this.left = node;
-			//this.left.setParent(this);
 
 		}
 		public IAVLNode getLeft()
@@ -842,7 +872,6 @@ public class AVLTree {
 		public void setRight(IAVLNode node)
 		{
 			this.right = node;
-			//this.right.setParent(this);
 
 		}
 		public IAVLNode getRight()
@@ -907,6 +936,8 @@ public class AVLTree {
 		public void setVirtualSons(){
 			this.setRight(new AVLNode(-1, null, -1, 0));
 			this.setLeft(new AVLNode(-1, null, -1, 0));
+			this.right.setParent(this);
+			this.left.setParent(this);
 		}
 		public int getHeightDif(IAVLNode child){
 			int diff = this.getHeight() - child.getHeight();
@@ -955,8 +986,8 @@ public class AVLTree {
 		tree2.insert(1, "bb");
 		tree2.insert(3, "bb");
 		String info = "info";
-		IAVLNode joinNode = new AVLNode(4, info);
-		tree.join(joinNode,tree2);
+		//IAVLNode joinNode = new AVLNode(4, info);
+		//tree.join(joinNode,tree2);
 		printPreorder(tree.root);
 
 	}
