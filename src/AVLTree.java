@@ -22,7 +22,7 @@ public class AVLTree {
 	 */
 	public boolean empty() {
 
-		return this.root == null;
+		return this.root == null || !this.root.isRealNode();
 	}
 //Meira
 	public String searchRec(int k, IAVLNode root){
@@ -120,7 +120,7 @@ public class AVLTree {
 	public int balanceWithNewBalance(IAVLNode node){
 		int amountOfBalances = 0;
 		while (node != null && !node.isBalanced()){
-			int newBalance = node.getBeforeUpdateBalance();
+			int newBalance = node.getBeforeUpdateBalance();// check if can be changed with set balance
 			if(newBalance == -2){
 				if(node.getRight().getBalance() == 0){
 					IAVLNode y = leftRotate(node);
@@ -142,19 +142,19 @@ public class AVLTree {
 				}
 			}
 			else if(newBalance == 2){
-				if(node.getRight().getBalance() == 0){
+				if(node.getLeft().getBalance() == 0){
 					IAVLNode y = rightRotate(node);
 					node = y.getLeft();
 					amountOfBalances+=3;
 				}
-				if(node.getRight().getBalance() == 1){
+				if(node.getLeft().getBalance() == 1){
 					IAVLNode leftChild = node.getLeft();
 					if(leftChild.getHeightDif(leftChild.getLeft()) == 1 && leftChild.getHeightDif(leftChild.getRight()) == 2){
 						node = rightRotate(node);
 						amountOfBalances+=3;
 					}
 					else{
-						node = leftRotate(node.getRight());
+						node = leftRotate(node.getLeft());
 						node = rightRotate(node.getParent());
 						amountOfBalances += 6;
 					}
@@ -174,8 +174,17 @@ public class AVLTree {
 
 	}
 
-	public IAVLNode deleteBst(IAVLNode node){
+	public void updateMinAndMaxDelete(int k){
+		if(k == this.min.getKey()){
+			this.min = searchForMin(this.root);
+		}
+		if(k == this.max.getKey()){
+			this.max = searchForMax(this.root);
+		}
+	}
 
+	public IAVLNode deleteBst(IAVLNode node){
+		int k = node.getKey();
 		IAVLNode parentToCheck = null;
 		if(!node.getLeft().isRealNode()){
 			switchPosition(node, node.getRight());
@@ -186,7 +195,7 @@ public class AVLTree {
 			parentToCheck = returnCurrParent(node.getLeft());
 		}
 		else{
-			IAVLNode succ = minNode(node.getRight());
+			IAVLNode succ = minNode(node.getRight()); //check is can be changed with searchmin
 			parentToCheck = returnCurrParent(succ);
 			if(!equals(succ.getParent(), node)){
 				switchPosition(succ, succ.getRight());
@@ -202,7 +211,7 @@ public class AVLTree {
 			succ.getLeft().setParent(succ);
 			update(succ);
 		}
-
+		this.updateMinAndMaxDelete(k);
 		return parentToCheck;
 
 	}
@@ -390,6 +399,29 @@ public class AVLTree {
 		}
 	}
 
+	private int getDifference(IAVLNode n){
+		return n.getRight().getHeight()-n.getLeft().getHeight();
+	}
+
+	private IAVLNode searchForMin(IAVLNode root){
+		if(!root.isRealNode())
+			return root;
+		while (root.getLeft().isRealNode()){
+			root = root.getLeft();
+		}
+		return root;
+	}
+
+	private IAVLNode searchForMax(IAVLNode root){
+		if(!root.isRealNode())
+			return root;
+		while(root.getRight().isRealNode()){
+			root = root.getRight();
+		}
+		return root;
+	}
+
+
 	/**
 	 * public int delete(int k)
 	 *
@@ -407,6 +439,8 @@ public class AVLTree {
 			return -1;
 		IAVLNode deletedNode = searchNode(k);
 		IAVLNode currParent = deleteBst(deletedNode);
+		if(this.empty())
+			return 0;
 		int newBalance = currParent.getBeforeUpdateBalance();
 
 		if(newBalance == 1 || newBalance == -1)
@@ -414,6 +448,13 @@ public class AVLTree {
 		else {
 			balanceOpCounter = balanceWithNewBalance(currParent);
 		}
+/*		if(k == this.min.getKey()){
+			this.min = searchForMin(this.root);
+		}
+		if(k == this.max.getKey()){
+			this.max = searchForMax(this.root);
+		}*/
+
 		return balanceOpCounter;
 	}
 
@@ -535,7 +576,7 @@ public class AVLTree {
 		AVLTree greater = new AVLTree();
 		IAVLNode s = searchNode(x);
 		if (s.getLeft().isRealNode()){
-		smaller.root = s.getLeft();
+			smaller.root = s.getLeft();
 		}
 		if (s.getRight().isRealNode()){
 			greater.root = s.getRight();
@@ -563,6 +604,125 @@ public class AVLTree {
 
 		return arr;
 	}
+	public void insertBalance(IAVLNode node){
+		while (node != null){
+			node.setBalance();
+			if(node.getBalance() == 1 || node.getBalance() == -1){
+				update(node);
+				//node = node.getParent();
+			}
+			//0212 single rotation when adding from the left
+			else if(node.getBalance() == 2 && node.getLeft().getBalance() == 1){
+				node = rightRotate(node);
+			}
+			else if(node.getBalance() == -2 && node.getRight().getBalance() == -1){
+				node = leftRotate(node);
+			}
+			//0221 double rotation when adding from the left
+			else if(node.getBalance() == 2 && node.getLeft().getBalance() == -1){
+				node = leftRotate(node.getLeft());
+				node = rightRotate(node.getParent());
+			}
+			else if(node.getBalance() == -2 && node.getRight().getBalance() == 1){
+				node = rightRotate(node.getRight());
+				node = leftRotate(node.getParent());
+			}
+			else if(node.getBalance() == 2 && node.getLeft().getBalance() == 0){
+				node = rightRotate(node);
+			}
+			else if(node.getBalance() == -2 && node.getRight().getBalance() == 0){
+				node = leftRotate(node);
+			}
+			else{
+				update(node);
+			}
+
+			node = node.getParent();
+		}
+
+
+	}
+
+	public IAVLNode getMax(){
+		return this.max;
+	}
+
+	public IAVLNode getMin(){
+		return this.min;
+	}
+
+	public void setMax(IAVLNode newMax){
+		this.max = newMax;
+	}
+
+	public void setMin(IAVLNode newMin){
+		this.min = newMin;
+	}
+
+	public void setRoot(IAVLNode newRoot){
+		this.root = newRoot;
+		newRoot.setParent(null);
+	}
+
+	public IAVLNode findNodeWithRankLessThen(int rank){
+		IAVLNode node = this.getRoot();
+		while (node.getHeight() > rank){
+			node = node.getLeft();
+		}
+		return node;
+	}
+
+	public IAVLNode findNodeWithRankLessThenRight(int rank){
+		IAVLNode node = this.getRoot();
+		while (node.getHeight() > rank){
+			node = node.getRight();
+		}
+		return node;
+	}
+
+	public void insertXForJoining(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot){
+		x.setLeft(otherRoot);
+		x.setRight(joinNode);
+		joinNode.getParent().setLeft(x);
+		x.setParent(joinNode.getParent());
+		otherRoot.setParent(x);
+		joinNode.setParent(x);
+
+	}
+
+	public void insertForJoiningRight(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot){
+		x.setRight(otherRoot);
+		x.setLeft(joinNode);
+		joinNode.getParent().setRight(x);
+		x.setParent(joinNode.getParent());
+		otherRoot.setParent(x);
+		joinNode.setParent(x);
+	}
+
+	public void updateThisTreeWhenThisIsHigherAndBigger(AVLTree t, IAVLNode x){
+		int smallerRank = t.getRoot().getHeight();
+		IAVLNode joinNode = this.findNodeWithRankLessThen(smallerRank);
+		this.insertXForJoining(x, joinNode, t.getRoot());
+		update(x);
+		//update(x.getParent());
+		insertBalance(x.getParent());
+	}
+
+	public void updateThisTreeWhenThisIsShorterAndSmaller(AVLTree t, IAVLNode x){
+		int smallerRank = this.getRoot().getHeight();
+		IAVLNode joinNode = t.findNodeWithRankLessThenRight(smallerRank);
+		t.insertForJoiningRight(x, joinNode, this.getRoot());
+		update(x);
+		//update(x.getParent());
+		insertBalance(x.getParent());
+	}
+
+	public void updateTreeWhenRankEqual(AVLTree leftTree, AVLTree rightTree, IAVLNode x){
+		x.setLeft(leftTree.getRoot());
+		x.setRight(rightTree.getRoot());
+		this.setRoot(x);
+		update(x);
+	}
 	/**
 	 * public join(IAVLNode x, AVLTree t)
 	 *
@@ -574,7 +734,58 @@ public class AVLTree {
 	//Meirav
 	public int join(IAVLNode x, AVLTree t)
 	{
-		return 0;
+		int timeComplex = 0;
+		if(this.empty() && t.empty()){
+			this.insert(x.getKey(), x.getInfo());
+			timeComplex = 1;
+		}
+		else if(this.empty() && !t.empty()){
+			t.insert(x.getKey(), x.getInfo());
+			this.root = t.getRoot();
+			this.setMax(t.getMax());
+			this.setMin(t.getMin());
+			timeComplex = t.getRoot().getHeight() + 1;
+		}
+		else if(!this.empty() && t.empty()){
+			this.insert(x.getKey(), x.getInfo());
+			timeComplex = this.getRoot().getHeight() + 1;
+		}
+		else{
+			int thisBeforeHeight = this.getRoot().getHeight();
+			int otherBeforeHeight = t.getRoot().getHeight();
+			if(t.getMax().getKey() < this.getMin().getKey()){
+				if(t.getRoot().getHeight() < this.getRoot().getHeight()){
+					this.updateThisTreeWhenThisIsHigherAndBigger(t, x);
+				}
+				else if(t.getRoot().getHeight() > this.getRoot().getHeight()){
+					this.updateThisTreeWhenThisIsShorterAndSmaller(t,x);
+					this.setRoot(t.getRoot());
+				}
+				else {
+					this.updateTreeWhenRankEqual(t, this, x);
+				}
+				this.setMin(t.getMin());
+			}
+			else if(t.getMin().getKey() > this.getMax().getKey()){
+				if(t.getRoot().getHeight() > this.getRoot().getHeight()){
+					t.updateThisTreeWhenThisIsHigherAndBigger(this, x);
+					this.setRoot(t.getRoot());
+				}
+				else if(t.getRoot().getHeight() < this.getRoot().getHeight()){
+					t.updateThisTreeWhenThisIsShorterAndSmaller(this, x);
+
+				}
+				else{
+					this.updateTreeWhenRankEqual(this, t, x);
+				}
+				this.setMax(t.getMax());
+
+			}
+
+			timeComplex = Math.abs(thisBeforeHeight - otherBeforeHeight) + 1;
+
+		}
+		return timeComplex;
 	}
 
 	/**
@@ -751,7 +962,9 @@ public class AVLTree {
 
 
 	public static void main(String[] args){
+		//IAVLNode joinNode = new AVLNode(4, "info");
 		AVLTree tree = new AVLTree();
+		/*
 		tree.insert(1, "bb");
 		tree.insert(2, "cc");
 		//tree.insert(4, "rr");
@@ -762,7 +975,19 @@ public class AVLTree {
 		tree.insert(9, "bb");
 		//tree.insert(10, "rg");
 		tree.insert(11, "grgg");
-		tree.insert(3, "grgg");
+		tree.insert(3, "grgg");*/
+		tree.insert(7, "bb");
+		tree.insert(5, "aa");
+		tree.insert(10, "ss");
+		tree.insert(8, "dd");
+
+		AVLTree tree2 = new AVLTree();
+		tree2.insert(2, "bb");
+		tree2.insert(1, "bb");
+		tree2.insert(3, "bb");
+		String info = "info";
+		//IAVLNode joinNode = new AVLNode(4, info);
+		//tree.join(joinNode,tree2);
 		printPreorder(tree.root);
 
 	}

@@ -32,7 +32,40 @@ class AVLTreeTest extends AVLTree {
         deleteFirstTest.insert(16, "info16");
         deleteFirstTest.insert(18, "info18");
         deleteFirstTest.insert(19, "info19");
+        //double rotation- rotate 15 left promote 18 demote 15 demote twice 20. 6 actions in total.
         assertEquals(6, deleteFirstTest.delete(30), "double rotation 20 demoted twice 18 promoted and 15 demoted");
+        assertEquals(-1, deleteFirstTest.delete(30), "30 doesn't exist in the tree therefore should return -1");
+        //case of deleting a binary node, no balance is needed, therefore 0.
+        assertEquals(0, deleteFirstTest.delete(20), "20 is a binary node. after deletion should be replaced by 25 with no balance steps at all");
+        //case of deleting a leaf, no balance is needed.
+        assertEquals(0, deleteFirstTest.delete(19), "30 doesn't exist in the tree therefore should return -1");
+        //deleting the root- single right rotate of 25.
+        assertEquals(3, deleteFirstTest.delete(18), "single right rotation, demote 25 promote 15");
+        //promote 15 after deleting 25 and replacing it with 16
+        assertEquals(1, deleteFirstTest.delete(25), "30 doesn't exist in the tree therefore should return -1");
+        //no balance is needed
+        assertEquals(0, deleteFirstTest.delete(10), "30 doesn't exist in the tree therefore should return -1");
+        //promote 15
+        assertEquals(1, deleteFirstTest.delete(16), "30 doesn't exist in the tree therefore should return -1");
+        //deleting the last node in the tree, no balance is needed.
+        assertEquals(0, deleteFirstTest.delete(15), "30 doesn't exist in the tree therefore should return -1");
+        assertTrue(deleteFirstTest.empty(), "isEmpty return false after deleting all nodes in the tree.");
+        assertEquals(-1, deleteFirstTest.delete(15), "the tree is empty therefore suppose to return -1");
+
+        //single right rotate test
+        AVLTree deleteSingleRightRotate = new AVLTree();
+        deleteSingleRightRotate.insert(20, "info20");
+        deleteSingleRightRotate.insert(10, "info10");
+        deleteSingleRightRotate.insert(30, "info30");
+        deleteSingleRightRotate.insert(5, "info5");
+        deleteSingleRightRotate.insert(15, "info15");
+        assertEquals(3, deleteSingleRightRotate.delete(30), "right rotation promote 10 demote 20");
+
+
+
+
+
+
 
 
 
