@@ -142,19 +142,19 @@ public class AVLTree {
 				}
 			}
 			else if(newBalance == 2){
-				if(node.getRight().getBalance() == 0){
+				if(node.getLeft().getBalance() == 0){
 					IAVLNode y = rightRotate(node);
 					node = y.getLeft();
 					amountOfBalances+=3;
 				}
-				if(node.getRight().getBalance() == 1){
+				if(node.getLeft().getBalance() == 1){
 					IAVLNode leftChild = node.getLeft();
 					if(leftChild.getHeightDif(leftChild.getLeft()) == 1 && leftChild.getHeightDif(leftChild.getRight()) == 2){
 						node = rightRotate(node);
 						amountOfBalances+=3;
 					}
 					else{
-						node = leftRotate(node.getRight());
+						node = leftRotate(node.getLeft());
 						node = rightRotate(node.getParent());
 						amountOfBalances += 6;
 					}
@@ -565,18 +565,20 @@ public class AVLTree {
 				update(node);
 				//node = node.getParent();
 			}
+			//0212 single rotation when adding from the left
 			else if(node.getBalance() == 2 && node.getLeft().getBalance() == 1){
 				node = rightRotate(node);
 			}
-			else if(node.getBalance() == -2 && node.getLeft().getBalance() == -1){
+			else if(node.getBalance() == -2 && node.getRight().getBalance() == -1){
 				node = leftRotate(node);
 			}
+			//0221 double rotation when adding from the left
 			else if(node.getBalance() == 2 && node.getLeft().getBalance() == -1){
 				node = leftRotate(node.getLeft());
 				node = rightRotate(node.getParent());
 			}
-			else if(node.getBalance() == -2 && node.getLeft().getBalance() == 1){
-				node = rightRotate(node.getLeft());
+			else if(node.getBalance() == -2 && node.getRight().getBalance() == 1){
+				node = rightRotate(node.getRight());
 				node = leftRotate(node.getParent());
 			}
 			else if(node.getBalance() == 2 && node.getLeft().getBalance() == 0){
