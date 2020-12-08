@@ -371,7 +371,7 @@ public class AVLTree {
 					}
 					if (x.getBalance()>1 && z.getKey()<y.getKey()){ //LL
 						x = rightRotate(x);
-						actions += 3; // one rotations + 2 promotions/demotions
+						actions += 2; // one rotations + 2 promotions/demotions
 					}
 					if (x.getBalance()<-1 && z.getKey()<y.getKey()){ //RL
 						x.setRight(rightRotate(x.getRight()));
@@ -380,8 +380,9 @@ public class AVLTree {
 					}
 					if (x.getBalance()<-1 && z.getKey()>y.getKey()){ //RR
 						x = leftRotate(x);
-						actions +=3;
+						actions +=2;
 					}
+					updateTillRoot(x);
 					return actions; //once rotation has occurred tree is balanced
 				}
 				else if (x.getHeight() == y.getHeight()){
@@ -392,6 +393,7 @@ public class AVLTree {
 					x = x.getParent(); //continue loop to check if more balancing is required
 				}
 				else{ //heights and balance factors are legal - tree is balanced
+					updateTillRoot(x);
 					return actions;
 				}
 			}

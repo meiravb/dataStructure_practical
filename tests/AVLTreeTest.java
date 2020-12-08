@@ -1,4 +1,6 @@
+//import org.junit.Test;
 import org.junit.jupiter.api.Test;
+//import static org.junit.jupiter.api.
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,6 +17,7 @@ class AVLTreeTest extends AVLTree {
         assertEquals(6, inserFirstTest.insert(16, "info16"), "promote and then double rotation");
         assertEquals(2, inserFirstTest.insert(18, "info18"), "two promotions of 15 and 10");//1
         assertEquals(2, inserFirstTest.insert(19, "info19"), "two promotions of 15 and 10");//2
+
 
 
 

@@ -3,16 +3,16 @@ import java.util.Arrays;
 public class test {
     public static void main(String[] args){
         AVLTree t = new AVLTree();
-        t.insert(10, "10");
-        t.insert(20, "20");
-        t.insert(15, "15");
+        int a = t.insert(10, "10");
+        int b = t.insert(20, "20");
+        int c = t.insert(15, "15");
        // System.out.println(t.getRoot().getKey());
-        t.insert(25, "25");
+        int d = t.insert(25, "25");
        // System.out.println(t.getRoot().getRight().getRight().getKey());
-        t.insert(30, "30");
-        t.insert(16, "16");
-        t.insert(18, "18");
-        t.insert(19, "19");
+        int e = t.insert(30, "30");
+        int f = t.insert(16, "16");
+        int g = t.insert(18, "18");
+        int h = t.insert(19, "19");
 
         System.out.println(t.getRoot().getKey());
         System.out.println(t.getRoot().getLeft().getKey());
