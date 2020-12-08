@@ -123,8 +123,9 @@ public class AVLTree {
 			int newBalance = node.getBeforeUpdateBalance();// check if can be changed with set balance
 			if(newBalance == -2){
 				if(node.getRight().getBalance() == 0){
-					IAVLNode y = leftRotate(node);
-					node = y.getRight();
+					//IAVLNode y = leftRotate(node);
+					//node = y.getRight();
+					node = leftRotate(node);
 					amountOfBalances+=3;
 				}
 				else if(node.getRight().getBalance() == -1){
@@ -133,32 +134,31 @@ public class AVLTree {
 						node = leftRotate(node);
 						amountOfBalances+=3;
 					}
-					else{
-						node = rightRotate(node.getRight());
-						node = leftRotate(node.getParent());
-						amountOfBalances += 6;
-					}
-
+				}
+				else{
+					node = rightRotate(node.getRight());
+					node = leftRotate(node.getParent());
+					amountOfBalances += 6;
 				}
 			}
 			else if(newBalance == 2){
 				if(node.getLeft().getBalance() == 0){
-					IAVLNode y = rightRotate(node);
-					node = y.getLeft();
+					//IAVLNode y = rightRotate(node);
+					//node = y.getLeft();
+					node = rightRotate(node);
 					amountOfBalances+=3;
 				}
-				if(node.getLeft().getBalance() == 1){
+				else if(node.getLeft().getBalance() == 1){
 					IAVLNode leftChild = node.getLeft();
 					if(leftChild.getHeightDif(leftChild.getLeft()) == 1 && leftChild.getHeightDif(leftChild.getRight()) == 2){
 						node = rightRotate(node);
 						amountOfBalances+=3;
 					}
-					else{
-						node = leftRotate(node.getLeft());
-						node = rightRotate(node.getParent());
-						amountOfBalances += 6;
-					}
-
+				}
+				else{
+					node = leftRotate(node.getLeft());
+					node = rightRotate(node.getParent());
+					amountOfBalances += 6;
 				}
 
 			}
