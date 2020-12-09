@@ -27,7 +27,7 @@ class AVLTreeTest extends AVLTree {
         assertEquals(1, insertFlowSecond.insert(53, "info30"), "promote 17");//4
         assertEquals(3, insertFlowSecond.insert(4, "info16"), "promote and then double rotation");
         assertEquals(3, insertFlowSecond.insert(13, "info18"), "promote 11, 7, 14");//1
-        assertEquals(2, insertFlowSecond.insert(12, "info19"), "two promotions of 15 and 10");//2
+        assertEquals(6, insertFlowSecond.insert(12, "info19"), "two promotions of 15 and 10");//2
         //to be continued
 
 
@@ -214,6 +214,18 @@ class AVLTreeTest extends AVLTree {
 
     @Test
     public void splitTest(){
+        AVLTree t = new AVLTree();
+        t.insert(14, "14");
+        t.insert(17, "17");
+        t.insert(11, "11");
+        t.insert(7, "7");
+        t.insert(53, "53");
+        t.insert(4, "4");
+        t.insert(13, "13");
+        t.insert(12, "12");
+        AVLTree[] arr = new AVLTree[2];
+        arr = t.split(12);
+        assertEquals(7, arr[0].getRoot().getKey());
 
     }
 

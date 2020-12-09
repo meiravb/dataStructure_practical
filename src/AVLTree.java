@@ -548,7 +548,7 @@ public class AVLTree {
 	//meirav
 	public int size()
 	{
-		return this.size();
+		return this.root.getSize();
 	}
 
 	/**
@@ -583,22 +583,28 @@ public class AVLTree {
 		if (s.getRight().isRealNode()){
 			greater.root = s.getRight();
 		}
-		while (s!=null){
+		while (s.getParent()!=null){
 			if (s.getKey()>s.getParent().getKey()){ //s is a right son
 				if (s.getParent().getLeft().isRealNode()) { //s.parent has a left son
+					IAVLNode temp = new AVLNode(s.getParent().getKey(), s.getParent().getInfo());
+					temp.setParent(s.getParent().getParent());
 					AVLTree t = new AVLTree();
 					t.root = s.getParent().getLeft(); //t is the subtree whose root is s.parent.left
 					smaller.join(s.getParent(), t);
+					s = temp;
 				}
 			}
 			else{ //s is a left son
 				if (s.getParent().getRight().isRealNode()){ //s.parent has a right son
+					IAVLNode temp = new AVLNode(s.getParent().getKey(), s.getParent().getInfo());
+					temp.setParent(s.getParent().getParent());
 					AVLTree t = new AVLTree();
 					t.root = s.getParent().getRight(); //t is the subtree whose root is s.parent.right
 					greater.join(s.getParent(), t);
+					s = temp;
 				}
 			}
-			s = s.getParent(); //continue loop until root is reached
+			//s = s.getParent(); //continue loop until root is reached
 		}
 		AVLTree[] arr = new AVLTree[2];
 		arr[0] = smaller;
@@ -755,23 +761,27 @@ public class AVLTree {
 		else{
 			int thisBeforeHeight = this.getRoot().getHeight();
 			int otherBeforeHeight = t.getRoot().getHeight();
-			if(t.getMax().getKey() < this.getMin().getKey()){
+			if (t.getRoot().getKey()< this.getRoot().getKey()){
+			//if(t.getMax().getKey() < this.getMin().getKey()){
 				if(t.getRoot().getHeight() < this.getRoot().getHeight()){
 					this.updateThisTreeWhenThisIsHigherAndBigger(t, x);
 				}
 				else if(t.getRoot().getHeight() > this.getRoot().getHeight()){
 					this.updateThisTreeWhenThisIsShorterAndSmaller(t,x);
 					this.setRoot(t.getRoot());
+					this.getRoot().setParent(null);
 				}
 				else {
 					this.updateTreeWhenRankEqual(t, this, x);
 				}
 				this.setMin(t.getMin());
 			}
-			else if(t.getMin().getKey() > this.getMax().getKey()){
+			else if (t.getRoot().getKey()>this.getRoot().getKey()){
+			//else if(t.getMin().getKey() > this.getMax().getKey()){
 				if(t.getRoot().getHeight() > this.getRoot().getHeight()){
 					t.updateThisTreeWhenThisIsHigherAndBigger(this, x);
 					this.setRoot(t.getRoot());
+					this.getRoot().setParent(null);
 				}
 				else if(t.getRoot().getHeight() < this.getRoot().getHeight()){
 					t.updateThisTreeWhenThisIsShorterAndSmaller(this, x);
