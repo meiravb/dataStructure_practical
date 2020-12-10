@@ -254,6 +254,8 @@ class AVLTreeTest extends AVLTree {
         AVLTree[] arr = new AVLTree[2];
         arr = t.split(12);
         assertEquals(7, arr[0].getRoot().getKey());
+        int[] a = arr[0].keysToArray();
+        assertEquals(4, a[0]);
 
         AVLTree firstTest = new AVLTree();
         firstTest.insert(3, "info3");
