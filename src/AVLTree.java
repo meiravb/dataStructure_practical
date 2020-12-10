@@ -20,12 +20,12 @@ public class AVLTree {
 	 * returns true if and only if the tree is empty
 	 *
 	 */
-	public boolean empty() {
+	public boolean empty() { //O(1)
 
 		return this.root == null || !this.root.isRealNode();
 	}
 //Meira
-	public String searchRec(int k, IAVLNode root){
+	public String searchRec(int k, IAVLNode root){ //O(log(n))
 		if(root.getKey() == k)
 			return root.getInfo();
 		if(root.getKey() == -1)
@@ -40,7 +40,7 @@ public class AVLTree {
 
 	}
 
-	public IAVLNode searchNodeRec(int k, IAVLNode root){
+	public IAVLNode searchNodeRec(int k, IAVLNode root){ //O(kog(n) returns the node instead of it's info
 		if(root.getKey() == k)
 			return root;
 		if(root.getKey() == -1)
@@ -61,7 +61,7 @@ public class AVLTree {
 	 * returns the info of an item with key k if it exists in the tree
 	 * otherwise, returns null
 	 */
-	public String search(int k)
+	public String search(int k) // O(log(n)
 	{
 		//the case when the tree is empty
 		if(this.empty())
@@ -69,7 +69,7 @@ public class AVLTree {
 		return searchRec(k, this.root);
 	}
 
-	public IAVLNode searchNode(int k)
+	public IAVLNode searchNode(int k)// O(log(n) returns the node instead of it's info
 	{
 		//the case when the tree is empty
 		if(this.empty())
@@ -78,13 +78,13 @@ public class AVLTree {
 	}
 
 
-	public IAVLNode minNode(IAVLNode root){
+	public IAVLNode minNode(IAVLNode root){//O(log(n)
 		while (root.getLeft().isRealNode())
 			root = root.getLeft();
 		return root;
 	}
 
-	public void switchPosition(IAVLNode x, IAVLNode y){
+	public void switchPosition(IAVLNode x, IAVLNode y){ //O(1)
 		if(x.getParent() == null)
 			this.root = y;
 		else if(equals(x, x.getParent().getLeft()))
@@ -96,7 +96,7 @@ public class AVLTree {
 
 	}
 
-	public IAVLNode returnCurrParent(IAVLNode node){
+	public IAVLNode returnCurrParent(IAVLNode node){ //O(1)
 		if(node.getParent() == null){
 			return this.root;
 		}
@@ -109,7 +109,7 @@ public class AVLTree {
 		return h2;
 	}
 
-	public void updateTillRoot(IAVLNode node){
+	public void updateTillRoot(IAVLNode node){//O(log(n))
 		while (node != null){
 			update(node);
 			node = node.getParent();
@@ -117,7 +117,7 @@ public class AVLTree {
 	}
 
 
-	public int balanceWithNewBalance(IAVLNode node){
+	public int deleteBalance(IAVLNode node){//O(log(n))
 		int amountOfBalances = 0;
 		while (node != null && !node.isBalanced()){
 			int newBalance = node.getBeforeUpdateBalance();// check if can be changed with set balance
@@ -129,8 +129,8 @@ public class AVLTree {
 					amountOfBalances+=3;
 				}
 				else if(node.getRight().getBalance() == -1){
-					IAVLNode rightChild = node.getRight();
-					if(rightChild.getHeightDif(rightChild.getLeft()) == 2 && rightChild.getHeightDif(rightChild.getRight()) == 1){
+					IAVLNode rightChild = node.getRight();//
+					if(rightChild.getHeightDif(rightChild.getLeft()) == 2 && rightChild.getHeightDif(rightChild.getRight()) == 1){//
 						node = leftRotate(node);
 						amountOfBalances+=3;
 					}
@@ -149,8 +149,8 @@ public class AVLTree {
 					amountOfBalances+=3;
 				}
 				else if(node.getLeft().getBalance() == 1){
-					IAVLNode leftChild = node.getLeft();
-					if(leftChild.getHeightDif(leftChild.getLeft()) == 1 && leftChild.getHeightDif(leftChild.getRight()) == 2){
+					IAVLNode leftChild = node.getLeft();//
+					if(leftChild.getHeightDif(leftChild.getLeft()) == 1 && leftChild.getHeightDif(leftChild.getRight()) == 2){//
 						node = rightRotate(node);
 						amountOfBalances+=3;
 					}
@@ -174,7 +174,7 @@ public class AVLTree {
 
 	}
 
-	public void updateMinAndMaxDelete(int k){
+	public void updateMinAndMaxDelete(int k){//O(1)
 		if(k == this.min.getKey()){
 			this.min = searchForMin(this.root);
 		}
@@ -183,7 +183,7 @@ public class AVLTree {
 		}
 	}
 
-	public IAVLNode deleteBst(IAVLNode node){
+	public IAVLNode deleteBst(IAVLNode node){//O(log(n))
 		int k = node.getKey();
 		IAVLNode parentToCheck = null;
 		if(!node.getLeft().isRealNode()){
@@ -211,14 +211,13 @@ public class AVLTree {
 			succ.getLeft().setParent(succ);
 			update(succ);
 		}
-		this.updateMinAndMaxDelete(k);
+		//this.updateMinAndMaxDelete(k);
 		return parentToCheck;
 
 	}
 
-	private boolean equals(IAVLNode x, IAVLNode y) {
+	private boolean equals(IAVLNode x, IAVLNode y) { //move is to avl node O(1)
 		return x.getKey() == y.getKey();
-
 	}
 
 	/**
@@ -275,7 +274,7 @@ public class AVLTree {
 		}
 	}
 
-	private void update(IAVLNode y){
+	private void update(IAVLNode y){//O(1)
 		y.setHeight();
 		y.setSize();
 		y.setBalance();
@@ -423,6 +422,12 @@ public class AVLTree {
 		return root;
 	}
 
+	public void setToEmptyTree(){
+		this.root = null;
+		this.max = null;
+		this.min = null;
+	}
+
 
 	/**
 	 * public int delete(int k)
@@ -441,22 +446,18 @@ public class AVLTree {
 			return -1;
 		IAVLNode deletedNode = searchNode(k);
 		IAVLNode currParent = deleteBst(deletedNode);
-		if(this.empty())
+		if(this.empty()){
+			this.setToEmptyTree();
 			return 0;
+		}
 		int newBalance = currParent.getBeforeUpdateBalance();
-
-		if(newBalance == 1 || newBalance == -1)
-			return balanceOpCounter;
+		if(newBalance != 1 && newBalance != -1){
+			balanceOpCounter = deleteBalance(currParent);
+		}
 		else {
-			balanceOpCounter = balanceWithNewBalance(currParent);
+			this.updateTillRoot(currParent);
 		}
-/*		if(k == this.min.getKey()){
-			this.min = searchForMin(this.root);
-		}
-		if(k == this.max.getKey()){
-			this.max = searchForMax(this.root);
-		}*/
-
+		this.updateMinAndMaxDelete(k);
 		return balanceOpCounter;
 	}
 
@@ -647,8 +648,6 @@ public class AVLTree {
 
 			node = node.getParent();
 		}
-
-
 	}
 
 	public IAVLNode getMax(){
@@ -667,9 +666,12 @@ public class AVLTree {
 		this.min = newMin;
 	}
 
+
 	public void setRoot(IAVLNode newRoot){
 		this.root = newRoot;
-		newRoot.setParent(null);
+		if(newRoot !=null){
+			newRoot.setParent(null);
+		}
 	}
 
 	public IAVLNode findNodeWithRankLessThen(int rank){
@@ -769,7 +771,7 @@ public class AVLTree {
 				else if(t.getRoot().getHeight() > this.getRoot().getHeight()){
 					this.updateThisTreeWhenThisIsShorterAndSmaller(t,x);
 					this.setRoot(t.getRoot());
-					this.getRoot().setParent(null);
+
 				}
 				else {
 					this.updateTreeWhenRankEqual(t, this, x);
@@ -781,7 +783,7 @@ public class AVLTree {
 				if(t.getRoot().getHeight() > this.getRoot().getHeight()){
 					t.updateThisTreeWhenThisIsHigherAndBigger(this, x);
 					this.setRoot(t.getRoot());
-					this.getRoot().setParent(null);
+
 				}
 				else if(t.getRoot().getHeight() < this.getRoot().getHeight()){
 					t.updateThisTreeWhenThisIsShorterAndSmaller(this, x);
@@ -827,6 +829,7 @@ public class AVLTree {
 		public int getHeightDif(IAVLNode child);
 		public boolean isBalanced();
 		public int getBeforeUpdateBalance();
+
 	}
 
 	/**
