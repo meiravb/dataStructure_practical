@@ -640,44 +640,6 @@ public class AVLTree {
 
 		return arr;
 	}
-	public void insertBalance2(IAVLNode node){
-		while (node != null){
-			node.setBalance();
-			if(node.getBalance() == 1 || node.getBalance() == -1){
-				update(node);
-				//node = node.getParent();
-			}
-			//0212 single rotation when adding from the left
-			else if(node.getBalance() == 2 && node.getLeft().getBalance() == 1){
-				node = rightRotate(node);
-			}
-			else if(node.getBalance() == -2 && node.getRight().getBalance() == -1){
-				node = leftRotate(node);
-			}
-			//0221 double rotation when adding from the left
-			else if(node.getBalance() == 2 && node.getLeft().getBalance() == -1){
-				node = leftRotate(node.getLeft());
-				node = rightRotate(node.getParent());
-			}
-			else if(node.getBalance() == -2 && node.getRight().getBalance() == 1){
-				node = rightRotate(node.getRight());
-				node = leftRotate(node.getParent());
-			}
-			else if(node.getBalance() == 2 && node.getLeft().getBalance() == 0){
-				node = rightRotate(node);
-			}
-			else if(node.getBalance() == -2 && node.getRight().getBalance() == 0){
-				node = leftRotate(node);
-			}
-			else{
-				update(node);
-			}
-
-			node = node.getParent();
-		}
-
-
-	}
 
 	public IAVLNode getMax(){
 		return this.max;

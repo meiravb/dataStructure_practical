@@ -268,7 +268,7 @@ class AVLTreeTest extends AVLTree {
         firstTest.insert(8, "info8");
         firstTest.insert(9, "info9");
         AVLTree[] arr1 = new AVLTree[2];
-        arr1 = firstTest.split(12);
+        arr1 = firstTest.split(6);
         int[] firstTreeKeysExpected = {1,2,3,4,5};
         int[] secondTreeKeysExpected = {7,8,9};
         int[] firstTreeKeys = arr1[0].keysToArray();
