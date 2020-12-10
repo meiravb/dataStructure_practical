@@ -603,28 +603,28 @@ public class AVLTree {
 			greater.setRoot(s.getRight());
 		}
 		while (s.getParent()!=null){ //last iteration is at the root's son
-			if (s.getKey()>s.getParent().getKey()){ //s is a right son
-				if (s.getParent().getLeft().isRealNode()) { //s.parent has a left son
+				if (s.getParent().getKey()<s.getKey()) { //s is a right son
 					IAVLNode temp = new AVLNode(s.getParent().getKey(), s.getParent().getInfo()); //create a temporary duplicate of s.parent
 																								// which stays in the tree and doesn't move
 																								// to the new smaller tree
 					temp.setParent(s.getParent().getParent());
 					AVLTree t = new AVLTree();
-					t.setRoot(s.getParent().getLeft()); //t is the subtree whose root is s.parent.left
+					if (s.getParent().getLeft().isRealNode())
+						t.setRoot(s.getParent().getLeft()); //t is the subtree whose root is s.parent.left
 					smaller.join(s.getParent(), t);
 					s = temp; //s=s.parent
 				}
-			}
+
 			else{ //s is a left son
-				if (s.getParent().getRight().isRealNode()){ //s.parent has a right son
 					IAVLNode temp = new AVLNode(s.getParent().getKey(), s.getParent().getInfo());
 					temp.setParent(s.getParent().getParent());
 					AVLTree t = new AVLTree();
-					t.setRoot(s.getParent().getRight()); //t is the subtree whose root is s.parent.right
+					if (s.getParent().getRight().isRealNode())
+						t.setRoot(s.getParent().getRight()); //t is the subtree whose root is s.parent.right
 					greater.join(s.getParent(), t);
 					s = temp;
 				}
-			}
+
 		}
 		//set min and max of new trees (each operation O(logn))
 		smaller.setMin();
@@ -651,6 +651,8 @@ public class AVLTree {
 		this.max = newMax;
 	}
 	public void setMax(){
+		if (this.empty())
+			return;
 		IAVLNode m = this.getRoot();
 		while (m.getRight().isRealNode()){
 			m = m.getRight();
@@ -663,6 +665,8 @@ public class AVLTree {
 	}
 
 	public void setMin(){
+		if (this.empty())
+			return;
 		IAVLNode m = this.getRoot();
 		while (m.getLeft().isRealNode()){
 			m = m.getLeft();
@@ -765,7 +769,6 @@ public class AVLTree {
 			int thisBeforeHeight = this.getRoot().getHeight();
 			int otherBeforeHeight = t.getRoot().getHeight();
 			if (t.getRoot().getKey()< this.getRoot().getKey()){
-			//if(t.getMax().getKey() < this.getMin().getKey()){
 				if(t.getRoot().getHeight() < this.getRoot().getHeight()){
 					this.updateThisTreeWhenThisIsHigherAndBigger(t, x);
 				}
@@ -779,7 +782,6 @@ public class AVLTree {
 				this.setMin(t.getMin());
 			}
 			else if (t.getRoot().getKey()>this.getRoot().getKey()){
-			//else if(t.getMin().getKey() > this.getMax().getKey()){
 				if(t.getRoot().getHeight() > this.getRoot().getHeight()){
 					t.updateThisTreeWhenThisIsHigherAndBigger(this, x);
 					this.setRoot(t.getRoot());
@@ -980,22 +982,22 @@ public class AVLTree {
 
 
 	public static void main(String[] args){
-		/*AVLTree t = new AVLTree();
-		t.insert(5, "14");
-		t.insert(4, "17");
-		t.insert(7, "11");
-		t.insert(2, "7");
-		t.insert(6, "53");
-		t.insert(8, "4");*/
+		AVLTree t = new AVLTree();
+		t.insert(5, "5");
+		t.insert(4, "4");
+		t.insert(7, "7");
+		t.insert(2, "2");
+		t.insert(6, "6");
+		t.insert(8, "8");
 		//System.out.println(t.getRoot().getKey());
 		//System.out.println(Arrays.toString(t.keysToArray()));
 		/*t.insert(18, "13");
 		t.insert(19, "12");
 		t.delete(30);*/
 		//AVLTree[] arr = new AVLTree[2];
-		//AVLTree[] arr = t.split(5);
-		/*System.out.println(Arrays.toString(arr[0].keysToArray()));
-		System.out.println(Arrays.toString(arr[1].keysToArray()));*/
+		AVLTree[] arr = t.split(8);
+		System.out.println(Arrays.toString(arr[0].keysToArray()));
+		System.out.println(Arrays.toString(arr[1].keysToArray()));
 
 
 		//IAVLNode joinNode = new AVLNode(4, "info");
