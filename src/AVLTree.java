@@ -607,16 +607,15 @@ public class AVLTree {
 		while (s.getParent()!=null) { //last iteration is at the root's son
 			if (s.getParent().getKey() < s.getKey()) { //s is a right son
 				IAVLNode temp = new AVLNode(s.getParent().getKey(), s.getParent().getInfo()); //create a temporary duplicate of s.parent
-				// which stays in the tree and doesn't move
-				// to the new smaller tree
+				// which stays in the tree and doesn't move to the new smaller tree
 				temp.setParent(s.getParent().getParent());
 				AVLTree t = new AVLTree();
 				if (s.getParent().getLeft().isRealNode())
 					t.setRoot(s.getParent().getLeft()); //t is the subtree whose root is s.parent.left
 				smaller.join(s.getParent(), t);
 				s = temp; //s=s.parent
-			} else { //s is a left son
-				if (s.getParent().getRight().isRealNode()) { //s.parent has a right son
+			}
+			else { //s is a left son
 					IAVLNode temp = new AVLNode(s.getParent().getKey(), s.getParent().getInfo());
 					temp.setParent(s.getParent().getParent());
 					AVLTree t = new AVLTree();
@@ -625,8 +624,6 @@ public class AVLTree {
 					greater.join(s.getParent(), t);
 					s = temp;
 				}
-
-			}
 		}
 		//set min and max of new trees (each operation O(logn))
 		smaller.setMin();
@@ -738,7 +735,9 @@ public class AVLTree {
 
 	public void updateTreeWhenRankEqual(AVLTree leftTree, AVLTree rightTree, IAVLNode x){
 		x.setLeft(leftTree.getRoot());
+		x.getLeft().setParent(x);
 		x.setRight(rightTree.getRoot());
+		x.getRight().setParent(x);
 		this.setRoot(x);
 		update(x);
 	}
@@ -989,25 +988,52 @@ public class AVLTree {
 
 	public static void main(String[] args){
 		AVLTree t = new AVLTree();
+		t.insert(3, "3");
+		t.insert(2, "2");
+		//t.insert(6, "6");
+		t.insert(1, "1");
+/*		t.insert(5, "5");
+		t.insert(7, "7");
+		t.insert(4, "4");
+		t.insert(8, "8");
+		t.insert(9, "9");
+		AVLTree[] arr = t.split(9);
+		System.out.println(arr[0].getRoot());*/
+		/*t.insert(6,"6");
 		t.insert(5, "5");
+		t.insert(7, "7");
+		t.insert(4, "4");
+		t.insert(8, "8");*/
+		AVLTree a = new AVLTree();
+		a.insert(5, "5");
+		a.insert(6, "6");
+		a.insert(7, "7");
+		AVLTree c = new AVLTree();
+		c.insert(4, "4");
+		IAVLNode node = c.getRoot();
+		t.join(node, a);
+		System.out.println(t.getRoot().getLeft().getParent().getKey());
+
+
+		/*t.insert(5, "5");
 		t.insert(4, "4");
 		t.insert(7, "7");
 		t.insert(2, "2");
 		t.insert(6, "6");
-		t.insert(8, "8");
+		t.insert(8, "8");*/
 		//System.out.println(t.getRoot().getKey());
 		//System.out.println(Arrays.toString(t.keysToArray()));
 		/*t.insert(18, "13");
 		t.insert(19, "12");
 		t.delete(30);*/
 		//AVLTree[] arr = new AVLTree[2];
-		AVLTree[] arr = t.split(8);
+		/*AVLTree[] arr = t.split(8);
 		System.out.println(Arrays.toString(arr[0].keysToArray()));
-		System.out.println(Arrays.toString(arr[1].keysToArray()));
+		System.out.println(Arrays.toString(arr[1].keysToArray()));*/
 
 
 		//IAVLNode joinNode = new AVLNode(4, "info");
-		AVLTree tree = new AVLTree();
+		//AVLTree tree = new AVLTree();
 		/*
 		tree.insert(1, "bb");
 		tree.insert(2, "cc");
@@ -1020,19 +1046,19 @@ public class AVLTree {
 		//tree.insert(10, "rg");
 		tree.insert(11, "grgg");
 		tree.insert(3, "grgg");*/
-		tree.insert(7, "bb");
+		/*tree.insert(7, "bb");
 		tree.insert(5, "aa");
 		tree.insert(10, "ss");
-		tree.insert(8, "dd");
+		tree.insert(8, "dd");*/
 
-		AVLTree tree2 = new AVLTree();
+		/*AVLTree tree2 = new AVLTree();
 		tree2.insert(2, "bb");
 		tree2.insert(1, "bb");
 		tree2.insert(3, "bb");
-		String info = "info";
+		String info = "info";*/
 		//IAVLNode joinNode = new AVLNode(4, info);
 		//tree.join(joinNode,tree2);
-		printPreorder(tree.root);
+		//printPreorder(tree.root);
 
 	}
 }
