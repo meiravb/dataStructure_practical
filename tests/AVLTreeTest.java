@@ -275,8 +275,8 @@ class AVLTreeTest extends AVLTree {
         int[] secondTreeKeys = arr1[1].keysToArray();
         assertArrayEquals(firstTreeKeysExpected, firstTreeKeys);
         assertArrayEquals(secondTreeKeysExpected, secondTreeKeys);
-        assertEquals(3, arr[0].getRoot().getKey());
-        assertEquals(7, arr[1].getRoot().getKey());
+        assertEquals(3, arr1[0].getRoot().getKey());
+        assertEquals(8, arr1[1].getRoot().getKey());
         //check max and min
         assertEquals(arr1[0].getMax().getKey(), 5);
         assertEquals(arr1[0].getMin().getKey(), 1);
@@ -289,7 +289,7 @@ class AVLTreeTest extends AVLTree {
         biggestKey.insert(2, "info2");
         biggestKey.insert(3, "info3");
         AVLTree[] arr2 = new AVLTree[2];
-        arr2 = firstTest.split(3);
+        arr2 = biggestKey.split(3);
         int[] biggestKeyExpacted = {1,2};
         int[] biggestKeyKeys = arr2[0].keysToArray();
         assertArrayEquals(biggestKeyExpacted, biggestKeyKeys);
@@ -414,8 +414,8 @@ class AVLTreeTest extends AVLTree {
         assertArrayEquals(unaryTestArr, unaryTest.keysToArray(), "returned the wrong array");
         //tree with unary root- right child
         AVLTree unaryTestLeft = new AVLTree();
-        unaryTest.insert(8, "info8");
-        unaryTest.insert(9, "info10");
+        unaryTestLeft.insert(8, "info8");
+        unaryTestLeft.insert(9, "info10");
         int[] unaryTestLeftArr = {8,9};
         assertArrayEquals(unaryTestLeftArr, unaryTestLeft.keysToArray(), "returned the wrong array");
         //regular big tree
@@ -463,8 +463,8 @@ class AVLTreeTest extends AVLTree {
         assertArrayEquals(unaryTestArr, unaryTest.infoToArray(), "returned the wrong array");
         //tree with unary root- right child
         AVLTree unaryTestLeft = new AVLTree();
-        unaryTest.insert(8, "info8");
-        unaryTest.insert(9, "info10");
+        unaryTestLeft.insert(8, "info8");
+        unaryTestLeft.insert(9, "info10");
         String[] unaryTestLeftArr = {"info8","info10"};
         assertArrayEquals(unaryTestLeftArr, unaryTestLeft.infoToArray(), "returned the wrong array");
         //regular big tree
@@ -490,15 +490,16 @@ class AVLTreeTest extends AVLTree {
         equalNodesForSome.insert(3, "info3");
         equalNodesForSome.insert(4, "info3");
         equalNodesForSome.insert(5, "info3");
-        assertTrue(equalNodesForSomeTest.equals(equalNodesForSome.infoToArray()), "returned the wrong array");
+        String[] newOne = equalNodesForSome.infoToArray();
+        assertArrayEquals(equalNodesForSomeTest, equalNodesForSome.infoToArray(), "returned the wrong array");
 
         //all info are the same
         AVLTree equalNodes = new AVLTree();
         String[] equalNodesTest = {"info1","info1", "info1"};
-        equalNodesForSome.insert(1, "info1");
-        equalNodesForSome.insert(2, "info1");
-        equalNodesForSome.insert(3, "info1");
-        assertTrue(equalNodesTest.equals(equalNodes.infoToArray()), "returned the wrong array");
+        equalNodes.insert(1, "info1");
+        equalNodes.insert(2, "info1");
+        equalNodes.insert(3, "info1");
+        assertArrayEquals(equalNodesTest, equalNodes.infoToArray(), "returned the wrong array");
 
 
     }
