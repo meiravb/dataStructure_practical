@@ -77,6 +77,7 @@ public class AVLTree {
 	 */
 	public String search(int k)
 	{
+		//the case when the tree is empty
 		if(this.empty())
 			return null;
 		return searchRec(k, this.root);
@@ -550,7 +551,6 @@ public class AVLTree {
 	 *
 	 * Returns the info of the item with the smallest key in the tree,
 	 * or null if the tree is empty
-	 * O(1)
 	 */
 	public String min()
 	{
@@ -564,7 +564,6 @@ public class AVLTree {
 	 *
 	 * Returns the info of the item with the largest key in the tree,
 	 * or null if the tree is empty
-	 * O(1)
 	 */
 	public String max()
 	{
@@ -679,28 +678,28 @@ public class AVLTree {
 		if (s.getRight().isRealNode()){
 			greater.setRoot(s.getRight());
 		}
-		while (s.getParent()!=null){ //last iteration is at the root's son
-			if (s.getKey()>s.getParent().getKey()){ //s is a right son
-				if (s.getParent().getLeft().isRealNode()) { //s.parent has a left son
-					IAVLNode temp = new AVLNode(s.getParent().getKey(), s.getParent().getInfo()); //create a temporary duplicate of s.parent
-																								// which stays in the tree and doesn't move
-																								// to the new smaller tree
-					temp.setParent(s.getParent().getParent());
-					AVLTree t = new AVLTree();
+		while (s.getParent()!=null) { //last iteration is at the root's son
+			if (s.getParent().getKey() < s.getKey()) { //s is a right son
+				IAVLNode temp = new AVLNode(s.getParent().getKey(), s.getParent().getInfo()); //create a temporary duplicate of s.parent
+				// which stays in the tree and doesn't move
+				// to the new smaller tree
+				temp.setParent(s.getParent().getParent());
+				AVLTree t = new AVLTree();
+				if (s.getParent().getLeft().isRealNode())
 					t.setRoot(s.getParent().getLeft()); //t is the subtree whose root is s.parent.left
-					smaller.join(s.getParent(), t);
-					s = temp; //s=s.parent
-				}
-			}
-			else{ //s is a left son
-				if (s.getParent().getRight().isRealNode()){ //s.parent has a right son
+				smaller.join(s.getParent(), t);
+				s = temp; //s=s.parent
+			} else { //s is a left son
+				if (s.getParent().getRight().isRealNode()) { //s.parent has a right son
 					IAVLNode temp = new AVLNode(s.getParent().getKey(), s.getParent().getInfo());
 					temp.setParent(s.getParent().getParent());
 					AVLTree t = new AVLTree();
-					t.setRoot(s.getParent().getRight()); //t is the subtree whose root is s.parent.right
+					if (s.getParent().getRight().isRealNode())
+						t.setRoot(s.getParent().getRight()); //t is the subtree whose root is s.parent.right
 					greater.join(s.getParent(), t);
 					s = temp;
 				}
+
 			}
 		}
 		//set min and max of new trees (each operation O(logn))
@@ -741,6 +740,8 @@ public class AVLTree {
 	}
 
 	public void setMax(){
+		if (this.empty())
+			return;
 		IAVLNode m = this.getRoot();
 		while (m.getRight().isRealNode()){
 			m = m.getRight();
@@ -757,6 +758,8 @@ public class AVLTree {
 	}
 
 	public void setMin(){
+		if (this.empty())
+			return;
 		IAVLNode m = this.getRoot();
 		while (m.getLeft().isRealNode()){
 			m = m.getLeft();
@@ -1026,7 +1029,6 @@ public class AVLTree {
 		public int getHeightDif(IAVLNode child);
 		public boolean isBalanced();
 		public int getBeforeUpdateBalance();
-		public boolean equals(IAVLNode other);
 
 	}
 
