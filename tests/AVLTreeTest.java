@@ -369,7 +369,7 @@ class AVLTreeTest extends AVLTree {
         assertArrayEquals(firstExpectedSmallerThenRoot, smallerThenRootKey);
         assertEquals(3, arr6[0].getRoot().getKey());
         assertArrayEquals(firstExpectedBiggerThenRoot, BiggerThenRootKey);
-        assertEquals(8, arr6[1].getRoot().getKey());
+        assertEquals(7, arr6[1].getRoot().getKey());
         assertEquals(2, arr6[0].getMin().getKey());
         assertEquals(5, arr6[0].getMax().getKey());
         assertEquals(7, arr6[1].getMin().getKey());
