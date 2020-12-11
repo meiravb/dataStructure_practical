@@ -431,8 +431,8 @@ class AVLTreeTest extends AVLTree {
         assertArrayEquals(unaryTestArr, unaryTest.keysToArray(), "returned the wrong array");
         //tree with unary root- right child
         AVLTree unaryTestLeft = new AVLTree();
-        unaryTest.insert(8, "info8");
-        unaryTest.insert(9, "info10");
+        unaryTestLeft.insert(8, "info8");
+        unaryTestLeft.insert(9, "info10");
         int[] unaryTestLeftArr = {8,9};
         assertArrayEquals(unaryTestLeftArr, unaryTestLeft.keysToArray(), "returned the wrong array");
         //regular big tree
@@ -480,8 +480,8 @@ class AVLTreeTest extends AVLTree {
         assertArrayEquals(unaryTestArr, unaryTest.infoToArray(), "returned the wrong array");
         //tree with unary root- right child
         AVLTree unaryTestLeft = new AVLTree();
-        unaryTest.insert(8, "info8");
-        unaryTest.insert(9, "info10");
+        unaryTestLeft.insert(8, "info8");
+        unaryTestLeft.insert(9, "info10");
         String[] unaryTestLeftArr = {"info8","info10"};
         assertArrayEquals(unaryTestLeftArr, unaryTestLeft.infoToArray(), "returned the wrong array");
         //regular big tree
@@ -507,15 +507,16 @@ class AVLTreeTest extends AVLTree {
         equalNodesForSome.insert(3, "info3");
         equalNodesForSome.insert(4, "info3");
         equalNodesForSome.insert(5, "info3");
-        assertTrue(equalNodesForSomeTest.equals(equalNodesForSome.infoToArray()), "returned the wrong array");
+        String[] newOne = equalNodesForSome.infoToArray();
+        assertArrayEquals(equalNodesForSomeTest, equalNodesForSome.infoToArray(), "returned the wrong array");
 
         //all info are the same
         AVLTree equalNodes = new AVLTree();
         String[] equalNodesTest = {"info1","info1", "info1"};
-        equalNodesForSome.insert(1, "info1");
-        equalNodesForSome.insert(2, "info1");
-        equalNodesForSome.insert(3, "info1");
-        assertTrue(equalNodesTest.equals(equalNodes.infoToArray()), "returned the wrong array");
+        equalNodes.insert(1, "info1");
+        equalNodes.insert(2, "info1");
+        equalNodes.insert(3, "info1");
+        assertArrayEquals(equalNodesTest, equalNodes.infoToArray(), "returned the wrong array");
 
 
     }
