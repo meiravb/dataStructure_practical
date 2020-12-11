@@ -896,6 +896,7 @@ public class AVLTree {
 				}
 				else if(t.getRoot().getHeight() < this.getRoot().getHeight()){
 					t.updateThisTreeWhenThisIsShorterAndSmaller(this, x);
+					this.setRoot(t.getRoot());
 
 				}
 				else{
