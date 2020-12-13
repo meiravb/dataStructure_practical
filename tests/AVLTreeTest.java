@@ -239,22 +239,7 @@ class AVLTreeTest extends AVLTree {
         assertEquals(2, tree4.join(joinNode3, tree5), "suppose to return 2");
         assertEquals(3, tree6.join(joinNode4, tree7), "suppose to return 3");
 
-        //testing the tree after join
-        /*AVLTree t1 = new AVLTree();
-        AVLTree t2 = new AVLTree();
 
-        t1.insert(1,"1");
-        t1.insert(2, "2");
-        t1.insert(3, "3");
-
-        t2.insert(5, "5");
-        t2.insert(6, "6");
-        t2.insert(7, "7");
-        IAVLNode
-        AVLTree c = new AVLTree();
-        c.insert(4, "4");
-        IAVLNode node = c.getRoot();
-        t1.join(node, t2);*/
     }
 
     @Test
@@ -369,7 +354,7 @@ class AVLTreeTest extends AVLTree {
         assertArrayEquals(firstExpectedSmallerThenRoot, smallerThenRootKey);
         assertEquals(3, arr6[0].getRoot().getKey());
         assertArrayEquals(firstExpectedBiggerThenRoot, BiggerThenRootKey);
-        assertEquals(8, arr6[1].getRoot().getKey());
+        assertEquals(7, arr6[1].getRoot().getKey());
         assertEquals(2, arr6[0].getMin().getKey());
         assertEquals(5, arr6[0].getMax().getKey());
         assertEquals(7, arr6[1].getMin().getKey());
