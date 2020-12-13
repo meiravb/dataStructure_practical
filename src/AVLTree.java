@@ -680,14 +680,14 @@ public class AVLTree {
 		}
 		while (s.getParent()!=null) { //last iteration is at the root's son
 			if (s.getParent().getKey() < s.getKey()) { //s is a right son
-				IAVLNode temp = new AVLNode(s.getParent().getKey(), s.getParent().getInfo()); //create a temporary duplicate of s.parent
+				IAVLNode node = new AVLNode(s.getParent().getKey(), s.getParent().getInfo()); //create a temporary duplicate of s.parent
 				// which stays in the tree and doesn't move to the new smaller tree
-				temp.setParent(s.getParent().getParent());
+				//temp.setParent(s.getParent().getParent());
 				AVLTree t = new AVLTree();
 				if (s.getParent().getLeft().isRealNode())
 					t.setRoot(s.getParent().getLeft()); //t is the subtree whose root is s.parent.left
-				smaller.join(s.getParent(), t);
-				s = temp; //s=s.parent
+				smaller.join(node, t);
+				s = s.getParent(); //s=s.parent
 			}
 			else { //s is a left son
 					IAVLNode temp = new AVLNode(s.getParent().getKey(), s.getParent().getInfo());
