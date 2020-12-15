@@ -11,7 +11,7 @@ import java.util.Stack;
  *
  */
 
-public class AVLTree<count1> {
+public class AVLTree {
 	private IAVLNode root;
 	private IAVLNode min;
 	private IAVLNode max;
@@ -538,7 +538,7 @@ public class AVLTree<count1> {
 	 * @return - if root is a real node- the node with the max key value in the tree,
 	 * otherwise, returns root.
 	 */
-	public IAVLNode searchForMax(IAVLNode root){
+	private IAVLNode searchForMax(IAVLNode root){
 		if(!root.isRealNode())
 			return root;
 		while(root.getRight().isRealNode()){
@@ -806,10 +806,7 @@ public class AVLTree<count1> {
 		if (this.empty())
 			return;
 		IAVLNode m = this.getRoot();
-		while (m.getRight().isRealNode()){
-			m = m.getRight();
-		}
-		this.setMax(m);
+		this.setMax(searchForMax(m));
 	}
 
 	/**
@@ -831,10 +828,7 @@ public class AVLTree<count1> {
 		if (this.empty())
 			return;
 		IAVLNode m = this.getRoot();
-		while (m.getLeft().isRealNode()){
-			m = m.getLeft();
-		}
-		this.setMin(m);
+		this.setMin(searchForMin(m));
 	}
 
 	/**
@@ -1128,8 +1122,7 @@ public class AVLTree<count1> {
 		private int height;
 		private int balance;
 		private int size;
-		private IAVLNode min;
-		private IAVLNode max;
+
 
 		public AVLNode(int key, String info){
 			this.key = key;
@@ -1237,7 +1230,7 @@ public class AVLTree<count1> {
 		public int getHeightDif(IAVLNode child){
 			int diff = this.getHeight() - child.getHeight();
 			return this.getHeight() - child.getHeight();
-		};
+		}
 		public boolean isBalanced(){
 			if(this == null || !this.isRealNode())
 				return true;
@@ -1257,6 +1250,7 @@ public class AVLTree<count1> {
 			return this.getKey() == y.getKey();
 		}
 	}
+
 
 
 	public static void main(String[] args){
@@ -1335,8 +1329,5 @@ public class AVLTree<count1> {
 
 	}
 }
-
-
-
   
 
