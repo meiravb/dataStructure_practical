@@ -733,6 +733,7 @@ public class AVLTree {
 				AVLTree t = new AVLTree();
 				if (s.getParent().getLeft().isRealNode())
 					t.setRoot(s.getParent().getLeft()); //t is the subtree whose root is s.parent.left
+				s.getParent().setParent(null);
 				smaller.join(s.getParent(), t);
 				s = temp; //s=s.parent
 			}
@@ -742,6 +743,7 @@ public class AVLTree {
 					AVLTree t = new AVLTree();
 					if (s.getParent().getRight().isRealNode())
 						t.setRoot(s.getParent().getRight()); //t is the subtree whose root is s.parent.right
+					s.getParent().setParent(null);
 					greater.join(s.getParent(), t);
 					s = temp;
 				}
@@ -796,10 +798,7 @@ public class AVLTree {
 		if (this.empty())
 			return;
 		IAVLNode m = this.getRoot();
-		while (m.getRight().isRealNode()){
-			m = m.getRight();
-		}
-		this.setMax(m);
+		this.setMax(searchForMax(m));
 	}
 
 	/**
@@ -821,10 +820,7 @@ public class AVLTree {
 		if (this.empty())
 			return;
 		IAVLNode m = this.getRoot();
-		while (m.getLeft().isRealNode()){
-			m = m.getLeft();
-		}
-		this.setMin(m);
+		this.setMin(searchForMin(m));
 	}
 
 	/**
@@ -1114,8 +1110,7 @@ public class AVLTree {
 		private int height;
 		private int balance;
 		private int size;
-		private IAVLNode min;
-		private IAVLNode max;
+
 
 		public AVLNode(int key, String info){
 			this.key = key;
@@ -1223,7 +1218,7 @@ public class AVLTree {
 		public int getHeightDif(IAVLNode child){
 			int diff = this.getHeight() - child.getHeight();
 			return this.getHeight() - child.getHeight();
-		};
+		}
 		public boolean isBalanced(){
 			if(this == null || !this.isRealNode())
 				return true;
