@@ -11,7 +11,7 @@ import java.util.Stack;
  *
  */
 
-public class AVLTree {
+public class AVLTree<count1> {
 	private IAVLNode root;
 	private IAVLNode min;
 	private IAVLNode max;
@@ -538,7 +538,7 @@ public class AVLTree {
 	 * @return - if root is a real node- the node with the max key value in the tree,
 	 * otherwise, returns root.
 	 */
-	private IAVLNode searchForMax(IAVLNode root){
+	public IAVLNode searchForMax(IAVLNode root){
 		if(!root.isRealNode())
 			return root;
 		while(root.getRight().isRealNode()){
@@ -714,6 +714,9 @@ public class AVLTree {
 	 * O(1)
 	 */
 	//Daniella
+	public int countJoin = 0;
+	public double sumJoin = 0;
+	public int maxJoin = 0;
 	public AVLTree[] split(int x)
 	{
 		AVLTree smaller = new AVLTree();
@@ -727,23 +730,30 @@ public class AVLTree {
 		}
 		while (s.getParent()!=null) { //last iteration is at the root's son
 			if (s.getParent().getKey() < s.getKey()) { //s is a right son
-				IAVLNode node = new AVLNode(s.getParent().getKey(), s.getParent().getInfo()); //create a temporary duplicate of s.parent
-				// which stays in the tree and doesn't move to the new smaller tree
-				//temp.setParent(s.getParent().getParent());
+				IAVLNode node = new AVLNode(s.getParent().getKey(), s.getParent().getInfo());
 				AVLTree t = new AVLTree();
 				if (s.getParent().getLeft().isRealNode())
 					t.setRoot(s.getParent().getLeft()); //t is the subtree whose root is s.parent.left
-				smaller.join(node, t);
-				s = s.getParent(); //s=s.parent
+				int temp = smaller.join(node, t);
+				if(temp>maxJoin){
+					maxJoin = temp;
+				}
+				sumJoin+=temp;
+				countJoin++;
+				s = s.getParent();
 			}
 			else { //s is a left son
-					IAVLNode temp = new AVLNode(s.getParent().getKey(), s.getParent().getInfo());
-					temp.setParent(s.getParent().getParent());
-					AVLTree t = new AVLTree();
+				IAVLNode node = new AVLNode(s.getParent().getKey(), s.getParent().getInfo());
+				AVLTree t = new AVLTree();
 					if (s.getParent().getRight().isRealNode())
 						t.setRoot(s.getParent().getRight()); //t is the subtree whose root is s.parent.right
-					greater.join(s.getParent(), t);
-					s = temp;
+				int temp = greater.join(node, t);
+				if(temp>maxJoin){
+					maxJoin = temp;
+				}
+				sumJoin+=temp;
+				countJoin++;
+				s = s.getParent();
 				}
 		}
 		//set min and max of new trees (each operation O(logn))
@@ -980,11 +990,14 @@ public class AVLTree {
 	/*
 	* -------------------------measurements section-----------------------------------
 	* */
+
+	public int count1 = 0;
 	private IAVLNode findParentWithRoot(int k, IAVLNode root){ //find parent of node to be inserted
 		// O(height of tree) = O(logn)
 		IAVLNode x = root;
 		IAVLNode y = null;
 		while (x.isRealNode()){
+			count1++;
 			y = x;
 			if (x.getKey() > k)
 				x = x.getLeft();
@@ -1000,6 +1013,7 @@ public class AVLTree {
 		if(maxKeyInTree == null)
 			return null;
 		while (maxKeyInTree.getParent() != null){
+			count1++;
 			if(k == maxKeyInTree.getKey())
 				break;
 			if(k > maxKeyInTree.getParent().getKey() && k < maxKeyInTree.getKey())
@@ -1245,7 +1259,6 @@ public class AVLTree {
 	}
 
 
-
 	public static void main(String[] args){
 		AVLTree t = new AVLTree();
 		t.insert(3, "3");
@@ -1322,5 +1335,8 @@ public class AVLTree {
 
 	}
 }
+
+
+
   
 

@@ -1,4 +1,8 @@
+import java.util.Arrays;
+import java.util.Random;
+
 public class insertionSort {
+    public static long count = 0;
     /*Function to sort array using insertion sort*/
     void sort(int arr[])
     {
@@ -10,12 +14,18 @@ public class insertionSort {
             /* Move elements of arr[0..i-1], that are
                greater than key, to one position ahead
                of their current position */
-            while (j >= 0 && arr[j] > key) {
-                arr[j + 1] = arr[j];
-                j = j - 1;
+            if (j >=0 && arr[j]>key){
+                while (j >= 0 && arr[j] > key) {
+                    arr[j + 1] = arr[j];
+                    j = j - 1;
+                    count++;
+                }
+                //count++;
             }
             arr[j + 1] = key;
         }
+
+        System.out.println("insertion-sort "+count);
     }
     /* A utility function to print array of size n*/
     static void printArray(int arr[])
@@ -27,14 +37,39 @@ public class insertionSort {
         System.out.println();
     }
 
+
+
     // Driver method
     public static void main(String args[])
     {
-        int arr[] = { 12, 11, 13, 5, 6 };
+        Random rd = new Random(); // creating Random object
+        int[] arr = new int[100000];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = rd.nextInt();
+        }
+        //Arrays.sort(arr);
+        //int[] reverse = new int[arr.length];
+        /*for(int i = 0; i<arr.length; i++){
+            reverse[arr.length-1-i] = arr[i];
+        }*/
 
-        insertionSort ob = new insertionSort();
-        ob.sort(arr);
+        AVLTree something = new AVLTree();
+        for(int i=0; i<arr.length; i++){
+            something.insert(arr[i], "infoSome");
+        }
 
-        printArray(arr);
+        //int randomKey = rd.ints(0, arr.length).findFirst().getAsInt();
+        int key = something.searchForMax(something.getRoot().getLeft()).getKey();
+        something.split(key);
+        //System.out.println("avl tree "+something.count1);
+        System.out.println("avg join "+something.sumJoin/something.countJoin);
+        System.out.println("sum join "+something.sumJoin);
+        System.out.println("count join "+something.countJoin);
+        System.out.println("max join "+something.maxJoin);
+        //int[] arr = {4,2,1,5,3};
+        /*insertionSort ob = new insertionSort();
+        ob.sort(arr);*/
+
+        //printArray(arr);
     }
 }
