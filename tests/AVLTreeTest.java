@@ -6,6 +6,37 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AVLTreeTest extends AVLTree {
 
+
+    static void printInorder(IAVLNode node)
+    {
+        if (node.getKey() == -1)
+            return;
+
+        /* first recur on left child */
+        printInorder(node.getLeft());
+
+        /* then print the data of node */
+        System.out.print(node.getKey() + " ");
+
+        /* now recur on right child */
+        printInorder(node.getRight());
+    }
+
+    static void printPreorder(IAVLNode node)
+    {
+        if (node.getKey() == -1)
+            return;
+
+        /* first print data of node */
+        System.out.print(node.getKey() + " ");
+
+        /* then recur on left sutree */
+        printPreorder(node.getLeft());
+
+        /* now recur on right subtree */
+        printPreorder(node.getRight());
+    }
+
     @Test
     public void insertTest(){
         AVLTree inserFirstTest = new AVLTree();
