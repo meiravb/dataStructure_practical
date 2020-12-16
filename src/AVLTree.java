@@ -145,11 +145,6 @@ public class AVLTree {
 		return node.getParent();
 	}
 
-	public int maxHeight(int h1, int h2){
-		if(h1 >= h2)
-			return h1;
-		return h2;
-	}
 
 	/**
 	 * public void updateTillRoot(IAVLNode node)
@@ -399,36 +394,6 @@ public class AVLTree {
 		return y;
 	}
 
-
-	static void printInorder(IAVLNode node)
-	{
-		if (node.getKey() == -1)
-			return;
-
-		/* first recur on left child */
-		printInorder(node.getLeft());
-
-		/* then print the data of node */
-		System.out.print(node.getKey() + " ");
-
-		/* now recur on right child */
-		printInorder(node.getRight());
-	}
-
-	static void printPreorder(IAVLNode node)
-	{
-		if (node.getKey() == -1)
-			return;
-
-		/* first print data of node */
-		System.out.print(node.getKey() + " ");
-
-		/* then recur on left sutree */
-		printPreorder(node.getLeft());
-
-		/* now recur on right subtree */
-		printPreorder(node.getRight());
-	}
 
 	/**
 	 * public int insertBalance(IAVLNode node)
@@ -859,6 +824,13 @@ public class AVLTree {
 		return node;
 	}
 
+	/**
+	 * public IAVLNode findNodeWithRankLessThenRight(int rank)
+	 * finds the first node in the tree with rank (of node) <= rank
+	 * when searching from the most right leaf of this tree
+	 * @param rank - the desired rank to find in this
+	 * @return - returns the first node in the right leaf with height <= rank
+	 */
 	public IAVLNode findNodeWithRankLessThenRight(int rank){
 		IAVLNode node = this.getRoot();
 		while (node.getHeight() > rank){
@@ -867,6 +839,14 @@ public class AVLTree {
 		return node;
 	}
 
+	/**
+	 * public void insertXForJoining(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot)
+	 * completes all required changes in hierarchy
+	 * in order to join this with x and other using joinNode
+	 * @param x - the key with which the join is performed
+	 * @param joinNode - the node in this tree where to which the other tree and x join
+	 * @param otherRoot - the tree to be joined to this
+	 */
 	public void insertXForJoining(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot){
 		x.setLeft(otherRoot);
 		x.setRight(joinNode);
@@ -877,6 +857,14 @@ public class AVLTree {
 
 	}
 
+	/**
+	 * public void insertForJoiningRight(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot)
+	 * completes all required changes in hierarchy
+	 * in order to join this with x and other using joinNode from the right
+	 * @param x- the key with which the join is performed
+	 * @param joinNode- the node in this tree where to which the other tree and x join
+	 * @param otherRoot- the tree to be joined to this
+	 */
 	public void insertForJoiningRight(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot){
 		x.setRight(otherRoot);
 		x.setLeft(joinNode);
@@ -886,24 +874,43 @@ public class AVLTree {
 		joinNode.setParent(x);
 	}
 
-	public void updateThisTreeWhenThisIsHigherAndBigger(AVLTree t, IAVLNode x){
+	/**
+	 * public void updateThisTreeWhenThisIsHigher(AVLTree t, IAVLNode x)
+	 * does all operations needed for the join,
+	 * calling findNodeWithRankLessThen, insertXForJoining and insertBalance
+	 * @param t - the other tree to be joined to this
+	 * @param x - the key to be joined with t and this
+	 */
+	public void updateThisTreeWhenThisIsHigher(AVLTree t, IAVLNode x){
 		int smallerRank = t.getRoot().getHeight();
 		IAVLNode joinNode = this.findNodeWithRankLessThen(smallerRank);
 		this.insertXForJoining(x, joinNode, t.getRoot());
 		update(x);
-		//update(x.getParent());
 		insertBalance(x.getParent());
 	}
 
-	public void updateThisTreeWhenThisIsShorterAndSmaller(AVLTree t, IAVLNode x){
+	/**
+	 * public void updateThisTreeWhenThisIsShorter(AVLTree t, IAVLNode x)
+	 * does all operations needed for the join,
+	 * calling findNodeWithRankLessThenRight, insertForJoiningRight and insertBalance
+	 * @param t - the other tree to be joined to this
+	 * @param x - the key to be joined with t and this
+	 */
+	public void updateThisTreeWhenThisIsShorter(AVLTree t, IAVLNode x){
 		int smallerRank = this.getRoot().getHeight();
 		IAVLNode joinNode = t.findNodeWithRankLessThenRight(smallerRank);
 		t.insertForJoiningRight(x, joinNode, this.getRoot());
 		update(x);
-		//update(x.getParent());
 		insertBalance(x.getParent());
 	}
 
+	/**
+	 * completes all needed operations for joining two trees
+	 * with the same heights.
+	 * @param leftTree - the tree with smaller keys
+	 * @param rightTree - the tree with bigger keys
+	 * @param x - the node to put as the new root
+	 */
 	public void updateTreeWhenRankEqual(AVLTree leftTree, AVLTree rightTree, IAVLNode x){
 		x.setLeft(leftTree.getRoot());
 		x.getLeft().setParent(x);
@@ -945,10 +952,10 @@ public class AVLTree {
 			if (t.getRoot().getKey()< this.getRoot().getKey()){
 			//if(t.getMax().getKey() < this.getMin().getKey()){
 				if(t.getRoot().getHeight() < this.getRoot().getHeight()){
-					this.updateThisTreeWhenThisIsHigherAndBigger(t, x);
+					this.updateThisTreeWhenThisIsHigher(t, x);
 				}
 				else if(t.getRoot().getHeight() > this.getRoot().getHeight()){
-					this.updateThisTreeWhenThisIsShorterAndSmaller(t,x);
+					this.updateThisTreeWhenThisIsShorter(t,x);
 					this.setRoot(t.getRoot());
 				}
 				else {
@@ -959,11 +966,11 @@ public class AVLTree {
 			else if (t.getRoot().getKey()>this.getRoot().getKey()){
 			//else if(t.getMin().getKey() > this.getMax().getKey()){
 				if(t.getRoot().getHeight() > this.getRoot().getHeight()){
-					t.updateThisTreeWhenThisIsHigherAndBigger(this, x);
+					t.updateThisTreeWhenThisIsHigher(this, x);
 					this.setRoot(t.getRoot());
 				}
 				else if(t.getRoot().getHeight() < this.getRoot().getHeight()){
-					t.updateThisTreeWhenThisIsShorterAndSmaller(this, x);
+					t.updateThisTreeWhenThisIsShorter(this, x);
 					this.setRoot(t.getRoot());
 
 				}

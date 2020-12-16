@@ -43,29 +43,31 @@ public class insertionSort {
     public static void main(String args[])
     {
         Random rd = new Random(); // creating Random object
-        int[] arr = new int[100000];
+        int[] arr = new int[10000];
+        //int[] arr2 = {10,9,8,7,6,5,4,3,2,1};
         for (int i = 0; i < arr.length; i++) {
             arr[i] = rd.nextInt();
         }
-        //Arrays.sort(arr);
-        //int[] reverse = new int[arr.length];
-        /*for(int i = 0; i<arr.length; i++){
+        Arrays.sort(arr);
+        int[] reverse = new int[arr.length];
+        for(int i = 0; i<arr.length; i++){
             reverse[arr.length-1-i] = arr[i];
-        }*/
-
-        AVLTree something = new AVLTree();
-        for(int i=0; i<arr.length; i++){
-            something.insert(arr[i], "infoSome");
         }
 
+        AVLTree something = new AVLTree();
+        for(int i=0; i<reverse.length; i++){
+            something.insertWithFingerSearch(reverse[i], "infoSome");
+        }
+        System.out.println("amount in avl tree "+something.count1);
+
         //int randomKey = rd.ints(0, arr.length).findFirst().getAsInt();
-        int key = something.searchForMax(something.getRoot().getLeft()).getKey();
+        /*int key = something.searchForMax(something.getRoot().getLeft()).getKey();
         something.split(key);
         //System.out.println("avl tree "+something.count1);
         System.out.println("avg join "+something.sumJoin/something.countJoin);
         System.out.println("sum join "+something.sumJoin);
         System.out.println("count join "+something.countJoin);
-        System.out.println("max join "+something.maxJoin);
+        System.out.println("max join "+something.maxJoin);*/
         //int[] arr = {4,2,1,5,3};
         /*insertionSort ob = new insertionSort();
         ob.sort(arr);*/
