@@ -290,8 +290,7 @@ public class AVLTree {
 	 * O(logn)
 	 */
 	private IAVLNode findParent(int k){ //find parent of node to be inserted
-											// O(height of tree) = O(logn)
-		IAVLNode x = this.root;
+		IAVLNode x = this.getRoot();
 		IAVLNode y = null;
 		while (x.isRealNode()){
 			y = x;
