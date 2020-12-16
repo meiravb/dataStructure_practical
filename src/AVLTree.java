@@ -34,7 +34,7 @@ public class AVLTree {
 	 * otherwise returns null.
 	 * O(log(n))
 	* */
-	public String searchRec(int k, IAVLNode root){
+	private String searchRec(int k, IAVLNode root){
 		if(root.getKey() == k)
 			return root.getInfo();
 		if(root.getKey() == -1)
@@ -53,9 +53,9 @@ public class AVLTree {
 	 *
 	 * returns the node with key k if exists in the tree,
 	 * otherwise returns null.
-	 * O(kog(n)
+	 * O(log(n)
 	 * */
-	public IAVLNode searchNodeRec(int k, IAVLNode root){
+	private IAVLNode searchNodeRec(int k, IAVLNode root){
 		if(root.getKey() == k)
 			return root;
 		if(root.getKey() == -1)
@@ -92,7 +92,7 @@ public class AVLTree {
 	 * otherwise, returns null
 	 * O(log(n))
 	 */
-	public IAVLNode searchNode(int k)
+	private IAVLNode searchNode(int k)
 	{
 		if(this.empty())
 			return null;
@@ -107,7 +107,7 @@ public class AVLTree {
 	 * @return the node in tree with minimal key value
 	 * O(log(n))
 	 */
-	public IAVLNode minNode(IAVLNode root){
+	private IAVLNode minNode(IAVLNode root){
 		while (root.getLeft().isRealNode())
 			root = root.getLeft();
 		return root;
@@ -120,7 +120,7 @@ public class AVLTree {
 	 * @param y -the node to place instead of x
 	 * O(1)
 	 */
-	public void switchPosition(IAVLNode x, IAVLNode y){
+	private void switchPosition(IAVLNode x, IAVLNode y){
 		if(x.getParent() == null)
 			this.root = y;
 		else if(x.equals(x.getParent().getLeft()))
@@ -140,7 +140,7 @@ public class AVLTree {
 	 * if node.getParent()==null returns the root of the tree
 	 * O(1)
 	 */
-	public IAVLNode returnCurrParent(IAVLNode node){
+	private IAVLNode returnCurrParent(IAVLNode node){
 		if(node.getParent() == null){
 			return this.root;
 		}
@@ -154,7 +154,7 @@ public class AVLTree {
 	 * @param node - the node where to start the update with
 	 * O(log(n))
 	 */
-	public void updateTillRoot(IAVLNode node){
+	private void updateTillRoot(IAVLNode node){
 		while (node != null){
 			update(node);
 			node = node.getParent();
@@ -169,7 +169,7 @@ public class AVLTree {
 	 * @return the amount of rebalance steps that was needed
 	 * O(log(n))
 	 */
-	public int deleteBalance(IAVLNode node){
+	private int deleteBalance(IAVLNode node){
 		int amountOfBalances = 0;
 		while (node != null && !node.isBalanced()){
 			int newBalance = node.getBeforeUpdateBalance();
@@ -221,7 +221,7 @@ public class AVLTree {
 	 * @param k - the deleted key value
 	 * O(log(n))
 	 */
-	public void updateMinAndMaxDelete(int k){
+	private void updateMinAndMaxDelete(int k){
 		if(k == this.min.getKey()){
 			this.min = searchForMin(this.root);
 		}
@@ -273,7 +273,7 @@ public class AVLTree {
 	 * private IAVLNode findParent(int k)
 	 * @post there is no node in the tree with the key k
 	 * returns the parent of the node to be inserted
-	 * O(logn)
+	 * O(log(n))
 	 */
 	private IAVLNode findParent(int k){
 		IAVLNode x = this.root;
@@ -290,7 +290,7 @@ public class AVLTree {
 
 	/**
 	 * private void bstInsert(IAVLNode z)
-	 * @param z
+	 * @param z - the node to be inserted
 	 * the function implements a regular BST insert (before re-balancing)
 	 * the function updates min and max
 	 * O(log(n))
@@ -350,7 +350,7 @@ public class AVLTree {
 	 * @return y - root of subtree after rotation
 	 * O(1)
 	 */
-	private IAVLNode leftRotate(IAVLNode x){//gets original root of subtree, returns new root of subtree - O(1)
+	private IAVLNode leftRotate(IAVLNode x){//gets original root of subtree, returns new root of subtree
 		IAVLNode y = x.getRight(); //y will be the new root
 		IAVLNode xParent = x.getParent();
 		x.setRight(y.getLeft());
@@ -371,7 +371,7 @@ public class AVLTree {
 	 * @return y - root of subtree after rotation
 	 * O(1)
 	 */
-	private IAVLNode rightRotate(IAVLNode x){ //same implementation as leftRotate - O(1)
+	private IAVLNode rightRotate(IAVLNode x){ //same implementation as leftRotate
 		IAVLNode y = x.getLeft();
 		IAVLNode xParent = x.getParent();
 		x.setLeft(y.getRight());
@@ -389,9 +389,9 @@ public class AVLTree {
 	 * public int insertBalance(IAVLNode node)
 	 * balances the tree whose root is node
 	 * @return number of balance actions taken (promotions, demotions and rotations)
-	 * O(logn)
+	 * O(log(n))
 	 */
-	public int insertBalance(IAVLNode node){
+	private int insertBalance(IAVLNode node){
 		int actions =0;
 		while (node != null){
 			node.setBalance();
@@ -445,9 +445,9 @@ public class AVLTree {
 	 * returns the number of rebalancing operations, or 0 if no rebalancing operations were necessary.
 	 * promotion/rotation - counted as one rebalnce operation, double-rotation is counted as 2.
 	 * returns -1 if an item with key k already exists in the tree.
-	 * O(logn)
+	 * O(log(n))
 	 */
-	public int insert(int k, String i) { // O(logn)
+	public int insert(int k, String i) {
 		if (this.empty()){ //tree is empty
 			IAVLNode node = new AVLNode(k, i);
 			this.setRoot(node); //node inserted is the root
@@ -476,9 +476,9 @@ public class AVLTree {
 	 * @param root -where to start the search from
 	 * @return - if root is a real node- the node with the min key value in the tree,
 	 * otherwise, returns root.
-	 * O(logn)
+	 * O(log(n))
 	 */
-	public IAVLNode searchForMin(IAVLNode root){
+	private IAVLNode searchForMin(IAVLNode root){
 		if(!root.isRealNode())
 			return root;
 		while (root.getLeft().isRealNode()){
@@ -492,8 +492,9 @@ public class AVLTree {
 	 * @param root -where to start the search from
 	 * @return - if root is a real node- the node with the max key value in the tree,
 	 * otherwise, returns root.
+	 * O(log(n))
 	 */
-	public IAVLNode searchForMax(IAVLNode root){
+	private IAVLNode searchForMax(IAVLNode root){
 		if(!root.isRealNode())
 			return root;
 		while(root.getRight().isRealNode()){
@@ -506,8 +507,9 @@ public class AVLTree {
 	/**
 	 * public void setToEmptyTree()
 	 * sets root, max, min to null
+	 * O(1)
 	 */
-	public void setToEmptyTree(){
+	private void setToEmptyTree(){
 		this.root = null;
 		this.max = null;
 		this.min = null;
@@ -522,6 +524,7 @@ public class AVLTree {
 	 * returns the number of rebalancing operations, or 0 if no rebalancing operations were needed.
 	 * demotion/rotation - counted as one rebalnce operation, double-rotation is counted as 2.
 	 * returns -1 if an item with key k was not found in the tree.
+	 * O(log(n))
 	 */
 	public int delete(int k)
 	{
@@ -668,7 +671,6 @@ public class AVLTree {
 	 * postcondition: none
 	 * O(1)
 	 */
-	//Daniella
 	public AVLTree[] split(int x)
 	{
 		AVLTree smaller = new AVLTree();
@@ -734,7 +736,7 @@ public class AVLTree {
 	 * @param newMax - the new node with max key
 	 * O(1)
 	 */
-	public void setMax(IAVLNode newMax){
+	private void setMax(IAVLNode newMax){
 		this.max = newMax;
 	}
 
@@ -742,9 +744,9 @@ public class AVLTree {
 	 * public void setMax()
 	 * sets the max of a tree when max is unknown
 	 * searches for max and then sets is
-	 * O(logn)
+	 * O(log(n))
 	 */
-	public void setMax(){
+	private void setMax(){
 		if (this.empty())
 			return;
 		IAVLNode m = this.getRoot();
@@ -756,7 +758,7 @@ public class AVLTree {
 	 * @param newMin - the new node with the min key
 	 * O(1)
 	 */
-	public void setMin(IAVLNode newMin){
+	private void setMin(IAVLNode newMin){
 		this.min = newMin;
 	}
 
@@ -764,9 +766,9 @@ public class AVLTree {
 	 * public void setMin()
 	 * sets the min of a tree when min is unknown
 	 * searches for min and then sets it
-	 * O(logn)
+	 * O(log(n))
 	 */
-	public void setMin(){
+	private void setMin(){
 		if (this.empty())
 			return;
 		IAVLNode m = this.getRoot();
@@ -780,7 +782,7 @@ public class AVLTree {
 	 * O(1)
 	 */
 
-	public void setRoot(IAVLNode newRoot){
+	private void setRoot(IAVLNode newRoot){
 		this.root = newRoot;
 		if(newRoot !=null){
 			newRoot.setParent(null);
@@ -793,7 +795,7 @@ public class AVLTree {
 	 * @param rank - the searched rank
 	 * @return - the first node with heigh = rank in this
 	 */
-	public IAVLNode findNodeWithRankLessThen(int rank){
+	private IAVLNode findNodeWithRankLessThen(int rank){
 		IAVLNode node = this.getRoot();
 		while (node.getHeight() > rank){
 			node = node.getLeft();
@@ -808,7 +810,7 @@ public class AVLTree {
 	 * @param rank - the desired rank to find in this
 	 * @return - returns the first node in the right leaf with height <= rank
 	 */
-	public IAVLNode findNodeWithRankLessThenRight(int rank){
+	private IAVLNode findNodeWithRankLessThenRight(int rank){
 		IAVLNode node = this.getRoot();
 		while (node.getHeight() > rank){
 			node = node.getRight();
@@ -824,7 +826,7 @@ public class AVLTree {
 	 * @param joinNode - the node in this tree where to which the other tree and x join
 	 * @param otherRoot - the tree to be joined to this
 	 */
-	public void insertXForJoining(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot){
+	private void insertXForJoining(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot){
 		x.setLeft(otherRoot);
 		x.setRight(joinNode);
 		joinNode.getParent().setLeft(x);
@@ -842,7 +844,7 @@ public class AVLTree {
 	 * @param joinNode- the node in this tree where to which the other tree and x join
 	 * @param otherRoot- the tree to be joined to this
 	 */
-	public void insertForJoiningRight(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot){
+	private void insertForJoiningRight(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot){
 		x.setRight(otherRoot);
 		x.setLeft(joinNode);
 		joinNode.getParent().setRight(x);
@@ -858,7 +860,7 @@ public class AVLTree {
 	 * @param t - the other tree to be joined to this
 	 * @param x - the key to be joined with t and this
 	 */
-	public void updateThisTreeWhenThisIsHigher(AVLTree t, IAVLNode x){
+	private void updateThisTreeWhenThisIsHigher(AVLTree t, IAVLNode x){
 		int smallerRank = t.getRoot().getHeight();
 		IAVLNode joinNode = this.findNodeWithRankLessThen(smallerRank);
 		this.insertXForJoining(x, joinNode, t.getRoot());
@@ -873,7 +875,7 @@ public class AVLTree {
 	 * @param t - the other tree to be joined to this
 	 * @param x - the key to be joined with t and this
 	 */
-	public void updateThisTreeWhenThisIsShorter(AVLTree t, IAVLNode x){
+	private void updateThisTreeWhenThisIsShorter(AVLTree t, IAVLNode x){
 		int smallerRank = this.getRoot().getHeight();
 		IAVLNode joinNode = t.findNodeWithRankLessThenRight(smallerRank);
 		t.insertForJoiningRight(x, joinNode, this.getRoot());
@@ -888,7 +890,7 @@ public class AVLTree {
 	 * @param rightTree - the tree with bigger keys
 	 * @param x - the node to put as the new root
 	 */
-	public void updateTreeWhenRankEqual(AVLTree leftTree, AVLTree rightTree, IAVLNode x){
+	private void updateTreeWhenRankEqual(AVLTree leftTree, AVLTree rightTree, IAVLNode x){
 		x.setLeft(leftTree.getRoot());
 		x.getLeft().setParent(x);
 		x.setRight(rightTree.getRoot());
@@ -979,14 +981,11 @@ public class AVLTree {
 		public void setHeight(int height); // sets the height of the node
 		public void setHeight(); //set height via children
 		public int getHeight(); // Returns the height of the node (-1 for virtual nodes)
-		public void setSize(int size); //sets the size of the subtree node is the root of
 		public void setSize(); //sets size of subtree via children
 		public int getSize(); //Returns the size of the subtree node is the root of
-		public void setBalance(int balance); //sets balance factor of node
 		public void setBalance(); //sets balance factor via children
 		public int getBalance(); //return balance factor of node
 		public void setVirtualSons(); //sets two virtual sons for new leaf node
-		public int getHeightDif(IAVLNode child);
 		public boolean isBalanced();
 		public int getBeforeUpdateBalance();
 		public boolean equals(IAVLNode y);
@@ -1086,9 +1085,6 @@ public class AVLTree {
 		{
 			return this.height;
 		}
-		public void setSize(int size){
-			this.size = size;
-		}
 
 		public void setSize(){
 			this.size = 1+this.left.getSize()+ this.right.getSize();
@@ -1100,10 +1096,6 @@ public class AVLTree {
 
 		public void setBalance(){
 			this.balance = this.left.getHeight()-this.right.getHeight();
-		}
-
-		public void setBalance(int b){
-			this.balance = b;
 		}
 
 		public int getBalance(){
