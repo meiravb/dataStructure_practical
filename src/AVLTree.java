@@ -20,9 +20,9 @@ public class AVLTree {
 	 * public boolean empty()
 	 *
 	 * returns true if and only if the tree is empty
-	 *
+	 * O(1)
 	 */
-	public boolean empty() { //O(1)
+	public boolean empty() {
 
 		return this.root == null || !this.root.isRealNode();
 	}
@@ -32,8 +32,9 @@ public class AVLTree {
 	 *
 	 * returns the info of a node with key k if exists in the tree,
 	 * otherwise returns null.
+	 * O(log(n))
 	* */
-	public String searchRec(int k, IAVLNode root){ //O(log(n))
+	public String searchRec(int k, IAVLNode root){
 		if(root.getKey() == k)
 			return root.getInfo();
 		if(root.getKey() == -1)
@@ -52,8 +53,9 @@ public class AVLTree {
 	 *
 	 * returns the node with key k if exists in the tree,
 	 * otherwise returns null.
+	 * O(kog(n)
 	 * */
-	public IAVLNode searchNodeRec(int k, IAVLNode root){ //O(kog(n)
+	public IAVLNode searchNodeRec(int k, IAVLNode root){
 		if(root.getKey() == k)
 			return root;
 		if(root.getKey() == -1)
@@ -170,20 +172,15 @@ public class AVLTree {
 	public int deleteBalance(IAVLNode node){
 		int amountOfBalances = 0;
 		while (node != null && !node.isBalanced()){
-			int newBalance = node.getBeforeUpdateBalance();// check if can be changed with set balance
+			int newBalance = node.getBeforeUpdateBalance();
 			if(newBalance == -2){
 				if(node.getRight().getBalance() == 0){
-					//IAVLNode y = leftRotate(node);
-					//node = y.getRight();
 					node = leftRotate(node);
 					amountOfBalances+=3;
 				}
 				else if(node.getRight().getBalance() == -1){
-					IAVLNode rightChild = node.getRight();//
-					if(rightChild.getHeightDif(rightChild.getLeft()) == 2 && rightChild.getHeightDif(rightChild.getRight()) == 1){//
-						node = leftRotate(node);
-						amountOfBalances+=3;
-					}
+					node = leftRotate(node);
+					amountOfBalances+=3;
 				}
 				else{
 					node = rightRotate(node.getRight());
@@ -193,24 +190,18 @@ public class AVLTree {
 			}
 			else if(newBalance == 2){
 				if(node.getLeft().getBalance() == 0){
-					//IAVLNode y = rightRotate(node);
-					//node = y.getLeft();
 					node = rightRotate(node);
 					amountOfBalances+=3;
 				}
 				else if(node.getLeft().getBalance() == 1){
-					IAVLNode leftChild = node.getLeft();//
-					if(leftChild.getHeightDif(leftChild.getLeft()) == 1 && leftChild.getHeightDif(leftChild.getRight()) == 2){//
-						node = rightRotate(node);
-						amountOfBalances+=3;
-					}
+					node = rightRotate(node);
+					amountOfBalances+=3;
 				}
 				else{
 					node = leftRotate(node.getLeft());
 					node = rightRotate(node.getParent());
 					amountOfBalances += 6;
 				}
-
 			}
 			else{
 				update(node);
@@ -258,7 +249,7 @@ public class AVLTree {
 			parentToCheck = returnCurrParent(node.getLeft());
 		}
 		else{
-			IAVLNode succ = minNode(node.getRight()); //check is can be changed with searchmin
+			IAVLNode succ = minNode(node.getRight());
 			parentToCheck = returnCurrParent(succ);
 			if(!succ.getParent().equals(node)){
 				switchPosition(succ, succ.getRight());
@@ -284,8 +275,7 @@ public class AVLTree {
 	 * returns the parent of the node to be inserted
 	 * O(logn)
 	 */
-	private IAVLNode findParent(int k){ //find parent of node to be inserted
-											// O(height of tree) = O(logn)
+	private IAVLNode findParent(int k){
 		IAVLNode x = this.root;
 		IAVLNode y = null;
 		while (x.isRealNode()){
@@ -303,9 +293,9 @@ public class AVLTree {
 	 * @param z
 	 * the function implements a regular BST insert (before re-balancing)
 	 * the function updates min and max
-	 * O(logn)
+	 * O(log(n))
 	 */
-	private void bstInsert(IAVLNode z){ //regular insert to bst - before balancing - O(logn)
+	private void bstInsert(IAVLNode z){
 		IAVLNode y = findParent(z.getKey());
 		z.setParent(y);
 		if (z.getKey()<y.getKey())
@@ -316,7 +306,7 @@ public class AVLTree {
 			this.setMax();
 		if (this.getMin() == null)
 			this.setMin();
-		if (z.getKey()<this.getMin().getKey()) //check if min/max need to be updated
+		if (z.getKey()<this.getMin().getKey())
 			this.setMin(z);
 		if (z.getKey()>this.getMax().getKey())
 			this.setMax(z);
@@ -999,6 +989,7 @@ public class AVLTree {
 		public int getHeightDif(IAVLNode child);
 		public boolean isBalanced();
 		public int getBeforeUpdateBalance();
+		public boolean equals(IAVLNode y);
 
 	}
 
@@ -1126,7 +1117,6 @@ public class AVLTree {
 			this.left.setParent(this);
 		}
 		public int getHeightDif(IAVLNode child){
-			int diff = this.getHeight() - child.getHeight();
 			return this.getHeight() - child.getHeight();
 		}
 		public boolean isBalanced(){
@@ -1139,92 +1129,14 @@ public class AVLTree {
 			if(this.getHeightDif(this.getLeft()) == 3 || this.getHeightDif(this.getRight()) == 3)
 				return false;
 			return true;
-		};
-
+		}
 		public int getBeforeUpdateBalance(){
 			return this.getLeft().getHeight() - this.getRight().getHeight();
-		};
+		}
+
 		public boolean equals(IAVLNode y) {
 			return this.getKey() == y.getKey();
 		}
-	}
-
-
-
-	public static void main(String[] args){
-		AVLTree t = new AVLTree();
-		t.insert(3, "3");
-		t.insert(2, "2");
-		//t.insert(6, "6");
-		t.insert(1, "1");
-/*		t.insert(5, "5");
-		t.insert(7, "7");
-		t.insert(4, "4");
-		t.insert(8, "8");
-		t.insert(9, "9");
-		AVLTree[] arr = t.split(9);
-		System.out.println(arr[0].getRoot());*/
-		/*t.insert(6,"6");
-		t.insert(5, "5");
-		t.insert(7, "7");
-		t.insert(4, "4");
-		t.insert(8, "8");*/
-		AVLTree a = new AVLTree();
-		a.insert(5, "5");
-		a.insert(6, "6");
-		a.insert(7, "7");
-		AVLTree c = new AVLTree();
-		c.insert(4, "4");
-		IAVLNode node = c.getRoot();
-		t.join(node, a);
-		System.out.println(t.getRoot().getLeft().getParent().getKey());
-
-
-		/*t.insert(5, "5");
-		t.insert(4, "4");
-		t.insert(7, "7");
-		t.insert(2, "2");
-		t.insert(6, "6");
-		t.insert(8, "8");*/
-		//System.out.println(t.getRoot().getKey());
-		//System.out.println(Arrays.toString(t.keysToArray()));
-		/*t.insert(18, "13");
-		t.insert(19, "12");
-		t.delete(30);*/
-		//AVLTree[] arr = new AVLTree[2];
-		/*AVLTree[] arr = t.split(8);
-		System.out.println(Arrays.toString(arr[0].keysToArray()));
-		System.out.println(Arrays.toString(arr[1].keysToArray()));*/
-
-
-		//IAVLNode joinNode = new AVLNode(4, "info");
-		//AVLTree tree = new AVLTree();
-		/*
-		tree.insert(1, "bb");
-		tree.insert(2, "cc");
-		//tree.insert(4, "rr");
-		tree.insert(5, "tt");
-		tree.insert(6, "bgtrb");
-		tree.insert(7, "bgtrb");
-		tree.insert(8, "bgtrb");
-		tree.insert(9, "bb");
-		//tree.insert(10, "rg");
-		tree.insert(11, "grgg");
-		tree.insert(3, "grgg");*/
-		/*tree.insert(7, "bb");
-		tree.insert(5, "aa");
-		tree.insert(10, "ss");
-		tree.insert(8, "dd");*/
-
-		/*AVLTree tree2 = new AVLTree();
-		tree2.insert(2, "bb");
-		tree2.insert(1, "bb");
-		tree2.insert(3, "bb");
-		String info = "info";*/
-		//IAVLNode joinNode = new AVLNode(4, info);
-		//tree.join(joinNode,tree2);
-		//printPreorder(tree.root);
-
 	}
 }
   
