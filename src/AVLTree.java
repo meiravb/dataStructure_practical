@@ -488,7 +488,7 @@ public class AVLTree {
 	 * otherwise, returns root.
 	 * O(logn)
 	 */
-	private IAVLNode searchForMin(IAVLNode root){
+	public IAVLNode searchForMin(IAVLNode root){
 		if(!root.isRealNode())
 			return root;
 		while (root.getLeft().isRealNode()){
@@ -503,7 +503,7 @@ public class AVLTree {
 	 * @return - if root is a real node- the node with the max key value in the tree,
 	 * otherwise, returns root.
 	 */
-	private IAVLNode searchForMax(IAVLNode root){
+	public IAVLNode searchForMax(IAVLNode root){
 		if(!root.isRealNode())
 			return root;
 		while(root.getRight().isRealNode()){
@@ -679,9 +679,6 @@ public class AVLTree {
 	 * O(1)
 	 */
 	//Daniella
-	public int countJoin = 0;
-	public double sumJoin = 0;
-	public int maxJoin = 0;
 	public AVLTree[] split(int x)
 	{
 		AVLTree smaller = new AVLTree();
@@ -699,12 +696,7 @@ public class AVLTree {
 				AVLTree t = new AVLTree();
 				if (s.getParent().getLeft().isRealNode())
 					t.setRoot(s.getParent().getLeft()); //t is the subtree whose root is s.parent.left
-				int temp = smaller.join(node, t);
-				if(temp>maxJoin){
-					maxJoin = temp;
-				}
-				sumJoin+=temp;
-				countJoin++;
+				smaller.join(node, t);
 				s = s.getParent();
 			}
 			else { //s is a left son
@@ -712,12 +704,7 @@ public class AVLTree {
 				AVLTree t = new AVLTree();
 					if (s.getParent().getRight().isRealNode())
 						t.setRoot(s.getParent().getRight()); //t is the subtree whose root is s.parent.right
-				int temp = greater.join(node, t);
-				if(temp>maxJoin){
-					maxJoin = temp;
-				}
-				sumJoin+=temp;
-				countJoin++;
+				greater.join(node, t);
 				s = s.getParent();
 				}
 		}
@@ -950,7 +937,6 @@ public class AVLTree {
 			int thisBeforeHeight = this.getRoot().getHeight();
 			int otherBeforeHeight = t.getRoot().getHeight();
 			if (t.getRoot().getKey()< this.getRoot().getKey()){
-			//if(t.getMax().getKey() < this.getMin().getKey()){
 				if(t.getRoot().getHeight() < this.getRoot().getHeight()){
 					this.updateThisTreeWhenThisIsHigher(t, x);
 				}
@@ -964,7 +950,6 @@ public class AVLTree {
 				this.setMin(t.getMin());
 			}
 			else if (t.getRoot().getKey()>this.getRoot().getKey()){
-			//else if(t.getMin().getKey() > this.getMax().getKey()){
 				if(t.getRoot().getHeight() > this.getRoot().getHeight()){
 					t.updateThisTreeWhenThisIsHigher(this, x);
 					this.setRoot(t.getRoot());
@@ -986,100 +971,6 @@ public class AVLTree {
 		}
 		return timeComplex;
 	}
-
-
-	/*
-	* -------------------------measurements section-----------------------------------
-	* */
-
-	public int count1 = 0;
-	private IAVLNode findParentWithRoot(int k, IAVLNode root){ //find parent of node to be inserted
-		// O(height of tree) = O(logn)
-		IAVLNode x = root;
-		IAVLNode y = null;
-		while (x.isRealNode()){
-			count1++;
-			y = x;
-			if (x.getKey() > k)
-				x = x.getLeft();
-			else
-				x = x.getRight();
-		}
-		return y;
-	}
-
-	//finger search only for measurements
-	public IAVLNode findParentWithFingerSearch(int k){
-		IAVLNode maxKeyInTree = this.max;
-		if(maxKeyInTree == null)
-			return null;
-		while (maxKeyInTree.getParent() != null){
-			count1++;
-			if(k == maxKeyInTree.getKey())
-				break;
-			if(k > maxKeyInTree.getParent().getKey() && k < maxKeyInTree.getKey())
-				break;
-			maxKeyInTree = maxKeyInTree.getParent();
-		}
-		return findParentWithRoot(k, maxKeyInTree);
-	}
-
-	public IAVLNode searchNodeWithFingerSearch(int k){
-		IAVLNode maxKeyInTree = this.max;
-		if(maxKeyInTree == null)
-			return null;
-		while (maxKeyInTree.getParent() != null){
-			if(k == maxKeyInTree.getKey())
-				break;
-			if(k > maxKeyInTree.getParent().getKey() && k < maxKeyInTree.getKey())
-				break;
-			maxKeyInTree = maxKeyInTree.getParent();
-		}
-		return searchNodeRec(k, maxKeyInTree);
-	}
-	//insert with finger search only for measurements
-	public int insertWithFingerSearch(int k, String i) { // O(logn)
-		if (this.empty()){ //tree is empty
-			IAVLNode node = new AVLNode(k, i);
-			this.setRoot(node); //node inserted is the root
-			node.setVirtualSons();
-			update(node);
-			this.setMin(node);
-			this.setMax(node);
-			return 0;
-		}
-		else if (this.searchNodeWithFingerSearch(k) != null){ //node with key k already exists
-			return -1;
-		}
-		else{
-			IAVLNode newNode = new AVLNode(k, i);
-			newNode.setVirtualSons(); //node will be inserted as leaf with 2 virtual sons
-			bstInsertWithFinger(newNode); //regular BST insert
-			//insertion has completed - start balancing
-			IAVLNode x = newNode.getParent();
-			int actions = 0; //counts # of actions taken to balance tree
-			actions = insertBalance(x);
-			return actions;
-		}
-	}
-	//only for measurements
-	private void bstInsertWithFinger(IAVLNode z){ //regular insert to bst - before balancing - O(logn)
-		IAVLNode y = findParentWithFingerSearch(z.getKey());
-		z.setParent(y);
-		if (z.getKey()<y.getKey())
-			y.setLeft(z);
-		else
-			y.setRight(z);
-		if (this.getMax() == null)
-			this.setMax();
-		if (this.getMin() == null)
-			this.setMin();
-		if (z.getKey()<this.getMin().getKey()) //check if min/max need to be updated
-			this.setMin(z);
-		if (z.getKey()>this.getMax().getKey())
-			this.setMax(z);
-	}
-
 
 	/**
 	 * public interface IAVLNode
