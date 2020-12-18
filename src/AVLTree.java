@@ -880,7 +880,7 @@ public class AVLTree {
 		IAVLNode joinNode = t.findNodeWithRankLessThenRight(smallerRank);
 		t.insertForJoiningRight(x, joinNode, this.getRoot());
 		update(x);
-		insertBalance(x.getParent());
+		t.insertBalance(x.getParent());
 	}
 
 	/**
@@ -949,7 +949,6 @@ public class AVLTree {
 				}
 				else if(t.getRoot().getHeight() < this.getRoot().getHeight()){
 					t.updateThisTreeWhenThisIsShorter(this, x);
-					this.setRoot(t.getRoot());
 
 				}
 				else{
