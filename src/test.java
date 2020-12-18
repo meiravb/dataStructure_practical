@@ -22,6 +22,11 @@ public class test {
         System.out.println(t.getRoot().getRight().getRight().getKey());
         System.out.println(t.getRoot().getLeft().getRight().getLeft().getKey());
         System.out.println(t.getRoot().getLeft().getRight().getRight().getKey());
+        System.out.println(Arrays.toString(t.keysToArray()));
+        AVLTree[] arr = t.split(10);
+        System.out.println(Arrays.toString(arr[0].keysToArray()));
+        System.out.println(Arrays.toString(arr[1].keysToArray()));
+
 
 
 
