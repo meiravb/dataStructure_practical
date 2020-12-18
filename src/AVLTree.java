@@ -28,7 +28,7 @@ public class AVLTree {
 	}
 
 	/**
-	* public String searchRec(int k, IAVLNode root)
+	* private String searchRec(int k, IAVLNode root)
 	 *
 	 * returns the info of a node with key k if exists in the tree,
 	 * otherwise returns null.
@@ -49,7 +49,7 @@ public class AVLTree {
 
 	}
 	/**
-	 * public IAVLNode searchNodeRec(int k, IAVLNode root)
+	 * private IAVLNode searchNodeRec(int k, IAVLNode root)
 	 *
 	 * returns the node with key k if exists in the tree,
 	 * otherwise returns null.
@@ -86,7 +86,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public IAVLNode searchNode(int k)
+	 * private IAVLNode searchNode(int k)
 	 *
 	 * returns the node with key k if it exists in the tree
 	 * otherwise, returns null
@@ -102,7 +102,7 @@ public class AVLTree {
 
 
 	/**
-	 * public IAVLNode minNode(IAVLNode root)
+	 * private IAVLNode minNode(IAVLNode root)
 	 * @param root - the root of this tree
 	 * @return the node in tree with minimal key value
 	 * O(log(n))
@@ -114,7 +114,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public void switchPosition(IAVLNode x, IAVLNode y)
+	 * private void switchPosition(IAVLNode x, IAVLNode y)
 	 * the function puts node y in the position of node x in the tree
 	 * @param x -the node you want to switch with y
 	 * @param y -the node to place instead of x
@@ -134,7 +134,7 @@ public class AVLTree {
 
 
 	/**
-	 * public IAVLNode returnCurrParent(IAVLNode node)
+	 * private IAVLNode returnCurrParent(IAVLNode node)
 	 * @param node
 	 * @return the parent node of node,
 	 * if node.getParent()==null returns the root of the tree
@@ -149,7 +149,7 @@ public class AVLTree {
 
 
 	/**
-	 * public void updateTillRoot(IAVLNode node)
+	 * private void updateTillRoot(IAVLNode node)
 	 * the function call update(node) to every node in the route from node to this.root
 	 * @param node - the node where to start the update with
 	 * O(log(n))
@@ -163,7 +163,7 @@ public class AVLTree {
 
 
 	/**
-	 * public int deleteBalance(IAVLNode node)
+	 * private int deleteBalance(IAVLNode node)
 	 * rebalacing the tree from node
 	 * @param node -the node to start the rebalancing process with
 	 * @return the amount of rebalance steps that was needed
@@ -216,7 +216,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public void updateMinAndMaxDelete(int k)
+	 * private void updateMinAndMaxDelete(int k)
 	 * updates min and max values after delete.
 	 * @param k - the deleted key value
 	 * O(log(n))
@@ -232,13 +232,13 @@ public class AVLTree {
 
 
 	/**
-	 * public IAVLNode deleteBst(IAVLNode node)
+	 * private IAVLNode deleteBst(IAVLNode node)
 	 * the function implements a regular delete from a binary search tree
 	 * @param node - the node to be deleted
 	 * @return - the node from which to start the balance process if needed.
 	 * O(log(n))
 	 */
-	public IAVLNode deleteBst(IAVLNode node){
+	private IAVLNode deleteBst(IAVLNode node){
 		IAVLNode parentToCheck = null;
 		if(!node.getLeft().isRealNode()){
 			switchPosition(node, node.getRight());
@@ -505,7 +505,7 @@ public class AVLTree {
 
 
 	/**
-	 * public void setToEmptyTree()
+	 * private void setToEmptyTree()
 	 * sets root, max, min to null
 	 * O(1)
 	 */
@@ -732,7 +732,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public void setMax(IAVLNode newMax)
+	 * private void setMax(IAVLNode newMax)
 	 * @param newMax - the new node with max key
 	 * O(1)
 	 */
@@ -741,7 +741,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public void setMax()
+	 * private void setMax()
 	 * sets the max of a tree when max is unknown
 	 * searches for max and then sets is
 	 * O(log(n))
@@ -754,7 +754,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public void setMin(IAVLNode newMin)
+	 * private void setMin(IAVLNode newMin)
 	 * @param newMin - the new node with the min key
 	 * O(1)
 	 */
@@ -763,7 +763,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public void setMin()
+	 * private void setMin()
 	 * sets the min of a tree when min is unknown
 	 * searches for min and then sets it
 	 * O(log(n))
@@ -776,7 +776,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public void setRoot(IAVLNode newRoot)
+	 * private void setRoot(IAVLNode newRoot)
 	 * sets a root to this
 	 * @param newRoot - the new root
 	 * O(1)
@@ -790,7 +790,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public IAVLNode findNodeWithRankLessThen
+	 * private IAVLNode findNodeWithRankLessThen
 	 * finds the first node in this with heigh/rank less then rank
 	 * @param rank - the searched rank
 	 * @return - the first node with heigh = rank in this
@@ -804,7 +804,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public IAVLNode findNodeWithRankLessThenRight(int rank)
+	 * private IAVLNode findNodeWithRankLessThenRight(int rank)
 	 * finds the first node in the tree with rank (of node) <= rank
 	 * when searching from the most right leaf of this tree
 	 * @param rank - the desired rank to find in this
@@ -819,7 +819,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public void insertXForJoining(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot)
+	 * private void insertXForJoining(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot)
 	 * completes all required changes in hierarchy
 	 * in order to join this with x and other using joinNode
 	 * @param x - the key with which the join is performed
@@ -837,7 +837,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public void insertForJoiningRight(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot)
+	 * private void insertForJoiningRight(IAVLNode x, IAVLNode joinNode, IAVLNode otherRoot)
 	 * completes all required changes in hierarchy
 	 * in order to join this with x and other using joinNode from the right
 	 * @param x- the key with which the join is performed
@@ -854,7 +854,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public void updateThisTreeWhenThisIsHigher(AVLTree t, IAVLNode x)
+	 * private void updateThisTreeWhenThisIsHigher(AVLTree t, IAVLNode x)
 	 * does all operations needed for the join,
 	 * calling findNodeWithRankLessThen, insertXForJoining and insertBalance
 	 * @param t - the other tree to be joined to this
@@ -869,7 +869,7 @@ public class AVLTree {
 	}
 
 	/**
-	 * public void updateThisTreeWhenThisIsShorter(AVLTree t, IAVLNode x)
+	 * private void updateThisTreeWhenThisIsShorter(AVLTree t, IAVLNode x)
 	 * does all operations needed for the join,
 	 * calling findNodeWithRankLessThenRight, insertForJoiningRight and insertBalance
 	 * @param t - the other tree to be joined to this
@@ -884,6 +884,7 @@ public class AVLTree {
 	}
 
 	/**
+	 * private void updateTreeWhenRankEqual(AVLTree leftTree, AVLTree rightTree, IAVLNode x)
 	 * completes all needed operations for joining two trees
 	 * with the same heights.
 	 * @param leftTree - the tree with smaller keys
