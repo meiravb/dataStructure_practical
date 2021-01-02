@@ -2,6 +2,9 @@ import java.sql.Array;
 import java.util.Arrays;
 import java.util.Stack;
 
+//Daniella Simani, id - 208539064, userName - felig
+//Meirav ben Yosef, id - 208433631, userName - meiravb
+
 /**
  *
  * AVLTree
@@ -28,15 +31,15 @@ public class AVLTree {
 	}
 
 	/**
-	* private String searchRec(int k, IAVLNode root)
+	 * private String searchRec(int k, IAVLNode root)
 	 *
 	 * returns the info of a node with key k if exists in the tree,
 	 * otherwise returns null.
 	 * O(log(n))
-	* */
+	 * */
 	private String searchRec(int k, IAVLNode root){
 		if(root.getKey() == k)
-			return root.getInfo();
+			return root.getValue();
 		if(root.getKey() == -1)
 			return null;
 
@@ -558,7 +561,7 @@ public class AVLTree {
 	public String min()
 	{
 		if (!this.empty())
-			return this.min.getInfo();
+			return this.min.getValue();
 		return null;
 	}
 
@@ -572,7 +575,7 @@ public class AVLTree {
 	public String max()
 	{
 		if (!this.empty())
-			return this.max.getInfo();
+			return this.max.getValue();
 		return null;
 	}
 
@@ -626,7 +629,7 @@ public class AVLTree {
 				current = current.getLeft();
 			}
 			current = s.pop();
-			arr[i] = current.getInfo();
+			arr[i] = current.getValue();
 			i++;
 			current = current.getRight();
 		}
@@ -684,7 +687,7 @@ public class AVLTree {
 		}
 		while (s.getParent()!=null) { //last iteration is at the root's son
 			if (s.getParent().getKey() < s.getKey()) { //s is a right son
-				IAVLNode node = new AVLNode(s.getParent().getKey(), s.getParent().getInfo());
+				IAVLNode node = new AVLNode(s.getParent().getKey(), s.getParent().getValue());
 				AVLTree t = new AVLTree();
 				if (s.getParent().getLeft().isRealNode())
 					t.setRoot(s.getParent().getLeft()); //t is the subtree whose root is s.parent.left
@@ -692,13 +695,13 @@ public class AVLTree {
 				s = s.getParent();
 			}
 			else { //s is a left son
-				IAVLNode node = new AVLNode(s.getParent().getKey(), s.getParent().getInfo());
+				IAVLNode node = new AVLNode(s.getParent().getKey(), s.getParent().getValue());
 				AVLTree t = new AVLTree();
-					if (s.getParent().getRight().isRealNode())
-						t.setRoot(s.getParent().getRight()); //t is the subtree whose root is s.parent.right
+				if (s.getParent().getRight().isRealNode())
+					t.setRoot(s.getParent().getRight()); //t is the subtree whose root is s.parent.right
 				greater.join(node, t);
 				s = s.getParent();
-				}
+			}
 		}
 		//set min and max of new trees (each operation O(logn))
 		smaller.setMin();
@@ -912,18 +915,18 @@ public class AVLTree {
 	{
 		int timeComplex = 0;
 		if(this.empty() && t.empty()){
-			this.insert(x.getKey(), x.getInfo());
+			this.insert(x.getKey(), x.getValue());
 			timeComplex = 1;
 		}
 		else if(this.empty() && !t.empty()){
-			t.insert(x.getKey(), x.getInfo());
+			t.insert(x.getKey(), x.getValue());
 			this.root = t.getRoot();
 			this.setMax(t.getMax());
 			this.setMin(t.getMin());
 			timeComplex = t.getRoot().getHeight() + 1;
 		}
 		else if(!this.empty() && t.empty()){
-			this.insert(x.getKey(), x.getInfo());
+			this.insert(x.getKey(), x.getValue());
 			timeComplex = this.getRoot().getHeight() + 1;
 		}
 		else{
@@ -970,7 +973,7 @@ public class AVLTree {
 	 */
 	public interface IAVLNode{
 		public int getKey(); //returns node's key (for virtual node return -1)
-		public String getInfo(); //returns node's value [info] (for virtual node return null)
+		public String getValue(); //returns node's value [info] (for virtual node return null)
 		public void setLeft(IAVLNode node); //sets left child
 		public IAVLNode getLeft(); //returns left child (if there is no left child return null)
 		public void setRight(IAVLNode node); //sets right child
@@ -1030,7 +1033,7 @@ public class AVLTree {
 
 			return this.key;
 		}
-		public String getInfo()
+		public String getValue()
 		{
 
 			return this.info;
@@ -1131,5 +1134,6 @@ public class AVLTree {
 		}
 	}
 }
-  
+
+
 

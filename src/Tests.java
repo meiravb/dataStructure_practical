@@ -152,12 +152,12 @@ public class Tests {
 
     private boolean checkOrderingOfTree(AVLTree.IAVLNode current) {
         if (current.getLeft().isRealNode()) {
-            if (Integer.parseInt(current.getLeft().getInfo()) > Integer.parseInt(current.getInfo()))
+            if (Integer.parseInt(current.getLeft().getValue()) > Integer.parseInt(current.getValue()))
                 return false;
             else
                 return checkOrderingOfTree(current.getLeft());
         } else if (current.getRight().isRealNode()) {
-            if (Integer.parseInt(current.getRight().getInfo()) < Integer.parseInt(current.getInfo()))
+            if (Integer.parseInt(current.getRight().getValue()) < Integer.parseInt(current.getValue()))
                 return false;
             else
                 return checkOrderingOfTree(current.getRight());
